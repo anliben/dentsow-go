@@ -1,0 +1,32 @@
+
+
+### getall
+http://localhost:3000/api/v1/users
+
+
+### getone
+http://localhost:3000/api/v1/users/1
+
+### create
+POST http://localhost:3000/api/v1/users
+Content-Type: application/json
+{
+    "username": "test",
+    "first_name": "test",
+    "last_name": "test",
+    "email": "test",
+    "password": "test",
+    "is_staff": true,
+    "is_activate": true,
+    "permissions": [
+        {
+        "name": "dasd",
+        "codename": "dasdasd"
+    }
+    ],
+        "groups": [
+            {
+            "name": "dasd"
+        }
+    ]
+}
