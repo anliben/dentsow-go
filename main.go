@@ -31,8 +31,9 @@ func main() {
 	app.Get("/metrics", monitor.New(monitor.Config{Title: "MyService Metrics Page"}))
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:4200, https://dentshow-api.up.railway.app, https://dentshow.vercel.app",
-		AllowHeaders: "Origin, Content-Type, Accept",
+		AllowOrigins:     "*",
+		AllowHeaders:     "",
+		AllowCredentials: false,
 	}))
 
 	db, _ := database.OpenConnection()
