@@ -1,6 +1,9 @@
 package models
 
 import (
+	"github.com/google/uuid"
+	"github.com/mobilemindtec/go-payments/api"
+	"github.com/mobilemindtec/go-payments/asaas"
 	"gorm.io/gorm"
 )
 
@@ -38,6 +41,7 @@ type Customer struct {
 	Cidade              string  `json:"cidade"`
 	Estado              string  `json:"estado"`
 	Prontuario          string  `json:"prontuario"`
+	Assasid             string  `json:"assas_id"`
 	Situacao            string  `json:"situacao"`
 	Indicao             string  `json:"indicao"`
 	Profissao           string  `json:"profissao"`
@@ -46,6 +50,28 @@ type Customer struct {
 	ConsultasRealizadas int     `json:"consultas_realizadas"`
 	ConsultasRestantes  int     `json:"consultas_restantes"`
 	Midia               []Files `gorm:"many2many:customer_midias;"  json:"midias"`
+}
+
+func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
+	uuid := uuid.New()
+	if u.Prontuario == "" {
+		u.Prontuario = uuid.String()
+	}
+
+	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
+
+	resp, _ := pay.CustomerCreate(&asaas.Customer{
+		Name:                 u.Nome,
+		CpfCnpj:              u.Cpf,
+		Email:                u.Email,
+		Phone:                u.Celular,
+		NotificationDisabled: false,
+		ExternalReference:    u.Prontuario,
+	})
+
+	u.Assasid = resp.Id
+
+	return nil
 }
 
 type Groups struct {
@@ -70,7 +96,7 @@ type Data struct {
 type Budget struct {
 	gorm.Model
 	DataRefer      int             `json:"data_refer"`
-	Data           Data            `gorm:"foreignKey:DataRefer"  json:"data"`
+	Data           string          `json:"data"`
 	Situacao       string          `json:"situacao"`
 	Anotacoes      string          `json:"anotacoes"`
 	FormaPagamento string          `json:"forma_pagamento"`
@@ -80,6 +106,37 @@ type Budget struct {
 	Arquivos       []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
 	Procedure      []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
 	ValorProposta  []ProposedValue `gorm:"many2many:budget_propostas;" json:"valores_proposta"`
+	Paymentid      string          `json:"paymentid"`
+	ValorTotal     float64         `json:"valor_total"`
+}
+
+func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
+	uuid := uuid.New()
+
+	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
+
+	resp, err := pay.PaymentCreate(&asaas.Payment{
+		BillingType:       asaas.BillingType(u.FormaPagamento),
+		Value:             u.ValorTotal,
+		Description:       "Denshow",
+		Name:              u.Cliente[0].Nome,
+		DueDateLimitDays:  5,
+		DueDate:           u.Data,
+		ChargeType:        "DETACHED",
+		Customer:          u.Cliente[0].Assasid,
+		ExternalReference: uuid.String(),
+		NextDueDate:       u.Data,
+		SubscriptionCycle: api.SubscriptionCycle(1),
+	})
+
+	u.Paymentid = resp.Id
+	u.Situacao = "PENDING"
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type User struct {

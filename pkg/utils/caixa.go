@@ -8,8 +8,30 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
+type Cartao struct {
+	Maquina string
+	X       string
+	Juros   string
+	Total   string
+	Liquido string
+	Status  string
+}
 
+type Pix struct {
+	Total  string
+	Pago   string
+	Status string
+}
+
+type Caixa struct {
+	Data       string
+	Prontuario string
+	Credito    Cartao
+	Debito     Cartao
+	Pix        Pix
+}
+
+func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
 	// models
 	// var user models.User
 	// var customer models.Customer
@@ -28,11 +50,11 @@ func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
 		return err
 	}
 
-	valor_total := ""
-
-	for i, item := range orcamento {
-		valor_total += item.ValorProposta[i].Price
-		fmt.Println(item.ValorProposta[i].Price)
+	for _, item := range orcamento {
+		// valor_total += item.ValorProposta[i].Price
+		date := item.Data
+		// transform date to string
+		fmt.Println(date)
 	}
 
 	return app.JSON(&fiber.Map{

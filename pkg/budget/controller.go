@@ -20,4 +20,5 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	routes.Get("/:id", r.GetById)
 	routes.Put("/:id", r.Update)
 	routes.Delete("/:id", r.Delete)
+	routes.Get("/status/:id/:status", r.GetStatus)
 }

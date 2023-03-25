@@ -53,7 +53,6 @@ func main() {
 	db.AutoMigrate(&models.Customer{})
 	db.AutoMigrate(&models.Procedure{})
 	db.AutoMigrate(&models.ProposedValue{})
-	db.AutoMigrate(&models.Data{})
 	db.AutoMigrate(&models.Budget{})
 
 	users.RegisterRoutes(app, db)
@@ -65,29 +64,27 @@ func main() {
 	utils.RegisterRoutes(app, db)
 	budget.RegisterRoutes(app, db)
 
+	runner()
+
 	app.Listen(getPort())
 }
 
 func runner() {
-
 	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
 
-	// resp, _ := pay.PaymentCreate(&asaas.Payment{
-	// 	BillingType:       "PIX",
-	// 	Value:             100,
-	// 	Description:       "coisa qualquer",
-	// 	Name:              "venda qualquer",
-	// 	DueDateLimitDays:  1,
-	// 	DueDate:           "2023-09-01",
-	// 	ChargeType:        "DETACHED",
-	// 	Customer:          "5173931",
-	// 	ExternalReference: "123",
-	// 	NextDueDate:       "2023-09-02",
-	// 	SubscriptionCycle: api.SubscriptionCycle(1),
-	// })
+	resp, _ := pay.PaymentCreate(&asaas.Payment{
+		BillingType:       "UNDEFINED",
+		Value:             250,
+		Description:       "clareamento de dentes",
+		Name:              "Joao victor paulino silva",
+		DueDateLimitDays:  1,
+		DueDate:           "2023-09-01",
+		ChargeType:        "DETACHED",
+		Customer:          "5208495",
+		ExternalReference: "123",
+		NextDueDate:       "2023-09-01",
+		SubscriptionCycle: api.SubscriptionCycle(1),
+	})
 
-	pf, _ := pay.PaymentFindByKey("id", "pay_1790099203448690")
-
-	fmt.Println(pf)
-
+	fmt.Println(resp)
 }
