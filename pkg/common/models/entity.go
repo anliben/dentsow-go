@@ -60,9 +60,17 @@ type Procedure struct {
 	Category string `json:"categoria"`
 }
 
+type Data struct {
+	gorm.Model
+	Dia int `json:"dia"`
+	Mes int `json:"mes"`
+	Ano int `json:"ano"`
+}
+
 type Budget struct {
 	gorm.Model
-	Data           string          `json:"data"`
+	DataRefer      int             `json:"data_refer"`
+	Data           Data            `gorm:"foreignKey:DataRefer"  json:"data"`
 	Situacao       string          `json:"situacao"`
 	Anotacoes      string          `json:"anotacoes"`
 	FormaPagamento string          `json:"forma_pagamento"`

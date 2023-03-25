@@ -16,4 +16,5 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 
 	routes := app.Group("/api/v1/utils")
 	routes.Get("/:table", r.GetCountIdTable)
+	routes.Get("/:mes/:ano", r.GetCaixaEnd)
 }

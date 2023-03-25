@@ -11,12 +11,15 @@ import (
 	"fiber/pkg/proposed"
 	"fiber/pkg/users"
 	"fiber/pkg/utils"
+	"fmt"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/mobilemindtec/go-payments/api"
+	"github.com/mobilemindtec/go-payments/asaas"
 )
 
 func getPort() string {
@@ -50,6 +53,7 @@ func main() {
 	db.AutoMigrate(&models.Customer{})
 	db.AutoMigrate(&models.Procedure{})
 	db.AutoMigrate(&models.ProposedValue{})
+	db.AutoMigrate(&models.Data{})
 	db.AutoMigrate(&models.Budget{})
 
 	users.RegisterRoutes(app, db)
@@ -62,4 +66,28 @@ func main() {
 	budget.RegisterRoutes(app, db)
 
 	app.Listen(getPort())
+}
+
+func runner() {
+
+	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
+
+	// resp, _ := pay.PaymentCreate(&asaas.Payment{
+	// 	BillingType:       "PIX",
+	// 	Value:             100,
+	// 	Description:       "coisa qualquer",
+	// 	Name:              "venda qualquer",
+	// 	DueDateLimitDays:  1,
+	// 	DueDate:           "2023-09-01",
+	// 	ChargeType:        "DETACHED",
+	// 	Customer:          "5173931",
+	// 	ExternalReference: "123",
+	// 	NextDueDate:       "2023-09-02",
+	// 	SubscriptionCycle: api.SubscriptionCycle(1),
+	// })
+
+	pf, _ := pay.PaymentFindByKey("id", "pay_1790099203448690")
+
+	fmt.Println(pf)
+
 }
