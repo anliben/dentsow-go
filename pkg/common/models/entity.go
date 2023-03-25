@@ -55,9 +55,9 @@ type Groups struct {
 
 type Procedure struct {
 	gorm.Model
-	Name     string `json:"name"`
-	Price    string `json:"price"`
-	Category string `json:"category"`
+	Name     string `json:"nome"`
+	Price    string `json:"preco"`
+	Category string `json:"categoria"`
 }
 
 type Budget struct {
