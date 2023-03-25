@@ -2,12 +2,15 @@ package main
 
 import (
 	"fiber/internal/database"
+	"fiber/pkg/budget"
+	"fiber/pkg/common/models"
 	"fiber/pkg/customer"
 	"fiber/pkg/files"
 	"fiber/pkg/groups"
 	"fiber/pkg/procedure"
 	"fiber/pkg/proposed"
 	"fiber/pkg/users"
+	"fiber/pkg/utils"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -45,9 +48,9 @@ func main() {
 	// db.AutoMigrate(&models.User{})
 	// db.AutoMigrate(&models.Files{})
 	// db.AutoMigrate(&models.Customer{})
-	// db.AutoMigrate(&models.Procedure{})
+	db.AutoMigrate(&models.Procedure{})
 	// db.AutoMigrate(&models.ProposedValue{})
-	// db.AutoMigrate(&models.Budget{})
+	db.AutoMigrate(&models.Budget{})
 
 	users.RegisterRoutes(app, db)
 	customer.RegisterRoutes(app, db)
@@ -55,6 +58,8 @@ func main() {
 	proposed.RegisterRoutes(app, db)
 	procedure.RegisterRoutes(app, db)
 	files.RegisterRoutes(app, db)
+	utils.RegisterRoutes(app, db)
+	budget.RegisterRoutes(app, db)
 
 	app.Listen(getPort())
 }

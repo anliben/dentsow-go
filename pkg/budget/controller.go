@@ -1,4 +1,4 @@
-package customer
+package budget
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -14,10 +14,10 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 		Db: db,
 	}
 
-	routes := app.Group("/api/v1/clientes")
+	routes := app.Group("/api/v1/orcamento")
 	routes.Get("/", r.GetAll)
 	routes.Post("/", r.Create)
 	routes.Get("/:id", r.GetById)
-	routes.Put("/:id", r.Update)
-	routes.Delete("/:id", r.Delete)
+	// routes.Put("/:id", r.Update)
+	// routes.Delete("/:id", r.Delete)
 }

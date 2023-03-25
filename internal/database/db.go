@@ -11,11 +11,11 @@ import (
 func OpenConnection() (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/Sao_Paulo",
-		"containers-us-west-23.railway.app",
+		"containers-us-west-48.railway.app",
 		"postgres",
-		"Woo2oJDYXR4CM7luKpmW",
+		"nlKglOgNr1A6ZprHjE6U",
 		"railway",
-		"5508")
+		"5733")
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

@@ -66,11 +66,11 @@ type Budget struct {
 	Situacao       string          `json:"situacao"`
 	Anotacoes      string          `json:"anotacoes"`
 	FormaPagamento string          `json:"forma_pagamento"`
-	Cliente        []Customer      `gorm:"many2many:budget_clientes;"  json:"cliente"`
 	VendedorRefer  int             `json:"vendedor_referer"`
+	Cliente        []Customer      `gorm:"many2many:budget_clientes;"  json:"cliente"`
 	Vendedor       User            `gorm:"foreignKey:VendedorRefer"  json:"vendedor"`
 	Arquivos       []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
-	Procedure      []Procedure     `gorm:"many2many:budget_procedures;" json:"procedimentos"`
+	Procedure      []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
 	ValorProposta  []ProposedValue `gorm:"many2many:budget_propostas;" json:"valores_proposta"`
 }
 
