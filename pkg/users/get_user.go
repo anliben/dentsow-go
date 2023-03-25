@@ -10,7 +10,7 @@ import (
 func (r *handler) UserGetAll(app *fiber.Ctx) error {
 	var users []models.User
 
-	err := r.Db.Preload("Groups").Preload("Permissions").Find(&users).Error
+	err := r.Db.Preload("Groups").Find(&users).Error
 
 	if err != nil {
 		app.Status(http.StatusNotFound).JSON(&fiber.Map{

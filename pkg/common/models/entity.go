@@ -1,8 +1,6 @@
 package models
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -20,7 +18,7 @@ type Files struct {
 }
 
 type Customer struct {
-	Id                  int     `json:"id"`
+	gorm.Model
 	Nome                string  `json:"nome"`
 	DataNascimento      string  `json:"data_nascimento"`
 	Cpf                 string  `json:"cpf"`
@@ -47,48 +45,43 @@ type Customer struct {
 	ConsultasCreditos   int     `json:"consultas_creditos"`
 	ConsultasRealizadas int     `json:"consultas_realizadas"`
 	ConsultasRestantes  int     `json:"consultas_restantes"`
-	Midia               []Files `gorm:"many2many:customer_midias;"`
+	Midia               []Files `gorm:"many2many:customer_midias;"  json:"midias"`
 }
 
 type Groups struct {
 	gorm.Model
-	Name string `json:"name"`
-}
-
-type Permissions struct {
-	gorm.Model
-	Name     string `json:"name"`
-	CodeName string `json:"codename"`
+	Nome string `json:"nome"`
 }
 
 type Procedure struct {
+	gorm.Model
 	Name     string `json:"name"`
 	Price    string `json:"price"`
 	Category string `json:"category"`
 }
 
 type Budget struct {
-	Id             int           `json:"id"`
-	ValorProposta  ProposedValue `json:"valor_proposta"`
-	Data           string        `json:"data"`
-	Situacao       string        `json:"situacao"`
-	Anotacoes      string        `json:"anotacoes"`
-	FormaPagamento string        `json:"forma_pagamento"`
-	Created        time.Time     `json:"created"`
-	Updated        time.Time     `json:"updated"`
-	Cliente        int           `json:"cliente"`
-	Arquivos       []Files       `gorm:"many2many:budget_arquivos;"`
+	gorm.Model
+	Data           string          `json:"data"`
+	Situacao       string          `json:"situacao"`
+	Anotacoes      string          `json:"anotacoes"`
+	FormaPagamento string          `json:"forma_pagamento"`
+	Cliente        []Customer      `gorm:"many2many:budget_clientes;"  json:"cliente"`
+	VendedorRefer  int             `json:"vendedor_referer"`
+	Vendedor       User            `gorm:"foreignKey:VendedorRefer"  json:"vendedor"`
+	Arquivos       []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
+	Procedure      []Procedure     `gorm:"many2many:budget_procedures;" json:"procedimentos"`
+	ValorProposta  []ProposedValue `gorm:"many2many:budget_propostas;" json:"valores_proposta"`
 }
 
 type User struct {
 	gorm.Model
-	Username    string        `json:"username"`
-	FirstName   string        `json:"first_name"`
-	LastName    string        `json:"last_name"`
-	Email       string        `json:"email"`
-	Password    string        `json:"password"`
-	IsStaff     bool          `json:"is_staff"`
-	IsActive    bool          `json:"is_active"`
-	Permissions []Permissions `gorm:"many2many:user_permissions;"`
-	Groups      []Groups      `gorm:"many2many:user_groups;"`
+	Username  string   `json:"username"`
+	FirstName string   `json:"first_name"`
+	LastName  string   `json:"last_name"`
+	Email     string   `json:"email"`
+	Password  string   `json:"password"`
+	IsStaff   bool     `json:"is_staff"`
+	IsActive  bool     `json:"is_active"`
+	Groups    []Groups `gorm:"many2many:user_groups;" json:"grupos"`
 }

@@ -1,4 +1,4 @@
-package users
+package procedure
 
 import (
 	"fiber/pkg/common/models"
@@ -7,8 +7,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (r handler) GetById(app *fiber.Ctx) error {
-	var user models.User
+func (r handler) Delete(app *fiber.Ctx) error {
+	var procedimento models.Procedure
 
 	id := app.Params("id")
 
@@ -19,16 +19,13 @@ func (r handler) GetById(app *fiber.Ctx) error {
 		return nil
 	}
 
-	err := r.Db.Preload("Groups").Where("id = ?", id).First(&user).Error
+	err := r.Db.Where("id = ?", id).Delete(&procedimento).Error
 
 	if err != nil {
 		app.Status(http.StatusNotFound).JSON(&fiber.Map{
-			"message": "User not found",
+			"message": "Procedimento not found",
 		})
 		return err
 	}
-
-	return app.JSON(&fiber.Map{
-		"item": user,
-	})
+	return app.Status(http.StatusNoContent).JSON(&fiber.Map{})
 }

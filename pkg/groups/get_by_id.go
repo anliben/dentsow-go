@@ -1,4 +1,4 @@
-package permissoes
+package groups
 
 import (
 	"fiber/pkg/common/models"
@@ -7,9 +7,10 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (r handler) PermissionGetAll(app *fiber.Ctx) error {
-	var permisson []models.Permissions
-	err := r.Db.Find(&permisson).Error
+func (r handler) GetById(app *fiber.Ctx) error {
+	var grupos models.Groups
+
+	err := r.Db.Find(&grupos).Where("id = ?", app.Params("id")).First(&grupos).Error
 
 	if err != nil {
 		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
@@ -19,9 +20,9 @@ func (r handler) PermissionGetAll(app *fiber.Ctx) error {
 	}
 
 	return app.JSON(&fiber.Map{
-		"count":    len(permisson),
+		"count":    1,
 		"next":     "null",
 		"previous": "null",
-		"items":    permisson,
+		"items":    grupos,
 	})
 }

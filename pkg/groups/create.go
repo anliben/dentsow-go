@@ -1,4 +1,4 @@
-package permissoes
+package groups
 
 import (
 	"fiber/pkg/common/models"
@@ -8,9 +8,9 @@ import (
 )
 
 func (r handler) Create(app *fiber.Ctx) error {
-	var permissions models.Permissions
+	var grupo models.Groups
 
-	err := app.BodyParser(&permissions)
+	err := app.BodyParser(&grupo)
 
 	if err != nil {
 		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
@@ -19,7 +19,7 @@ func (r handler) Create(app *fiber.Ctx) error {
 		return err
 	}
 
-	err = r.Db.Create(&permissions).Error
+	err = r.Db.Create(&grupo).Error
 
 	if err != nil {
 		app.Status(http.StatusBadRequest).JSON(&fiber.Map{
@@ -29,8 +29,8 @@ func (r handler) Create(app *fiber.Ctx) error {
 	}
 
 	app.JSON(&fiber.Map{
-		"message": "Permission created successfully",
-		"item":    permissions,
+		"message": "Grupo created successfully",
+		"item":    grupo,
 	})
 	return nil
 }
