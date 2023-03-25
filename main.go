@@ -44,12 +44,12 @@ func main() {
 	}))
 
 	db, _ := database.OpenConnection()
-	// db.AutoMigrate(&models.Groups{})
-	// db.AutoMigrate(&models.User{})
-	// db.AutoMigrate(&models.Files{})
-	// db.AutoMigrate(&models.Customer{})
+	db.AutoMigrate(&models.Groups{})
+	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.Files{})
+	db.AutoMigrate(&models.Customer{})
 	db.AutoMigrate(&models.Procedure{})
-	// db.AutoMigrate(&models.ProposedValue{})
+	db.AutoMigrate(&models.ProposedValue{})
 	db.AutoMigrate(&models.Budget{})
 
 	users.RegisterRoutes(app, db)

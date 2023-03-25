@@ -14,7 +14,7 @@ func (r handler) Create(app *fiber.Ctx) error {
 
 	if err != nil {
 		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
-			"message": "Invalid data",
+			"message": err,
 		})
 		return err
 	}
@@ -23,7 +23,7 @@ func (r handler) Create(app *fiber.Ctx) error {
 
 	if err != nil {
 		app.Status(http.StatusBadRequest).JSON(&fiber.Map{
-			"message": "Invalid data",
+			"message": err,
 		})
 		return err
 	}
