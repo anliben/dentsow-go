@@ -3,7 +3,6 @@ package main
 import (
 	"fiber/internal/database"
 	"fiber/pkg/budget"
-	"fiber/pkg/common/models"
 	"fiber/pkg/customer"
 	"fiber/pkg/files"
 	"fiber/pkg/groups"
@@ -47,13 +46,13 @@ func main() {
 	}))
 
 	db, _ := database.OpenConnection()
-	db.AutoMigrate(&models.Groups{})
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.Files{})
-	db.AutoMigrate(&models.Customer{})
-	db.AutoMigrate(&models.Procedure{})
-	db.AutoMigrate(&models.ProposedValue{})
-	db.AutoMigrate(&models.Budget{})
+	// db.AutoMigrate(&models.Groups{})
+	// db.AutoMigrate(&models.User{})
+	// db.AutoMigrate(&models.Files{})
+	// db.AutoMigrate(&models.Customer{})
+	// db.AutoMigrate(&models.Procedure{})
+	// db.AutoMigrate(&models.ProposedValue{})
+	// db.AutoMigrate(&models.Budget{})
 
 	users.RegisterRoutes(app, db)
 	customer.RegisterRoutes(app, db)
@@ -63,8 +62,6 @@ func main() {
 	files.RegisterRoutes(app, db)
 	utils.RegisterRoutes(app, db)
 	budget.RegisterRoutes(app, db)
-
-	runner()
 
 	app.Listen(getPort())
 }
