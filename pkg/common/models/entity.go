@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"github.com/google/uuid"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
@@ -140,10 +138,7 @@ func (u *Budget) BeforeSave(tx *gorm.DB) (err error) {
 	u.Data = resp.DateCreated
 	u.NetValue = resp.NetValue
 
-	fmt.Println(resp)
-
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 

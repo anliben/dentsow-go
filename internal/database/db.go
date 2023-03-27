@@ -19,7 +19,7 @@ func OpenConnection() (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic(err) // nao pode usar em producao
+		return nil, err
 	}
 
 	return db, err
