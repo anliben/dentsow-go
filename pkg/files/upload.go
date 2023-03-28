@@ -2,8 +2,9 @@ package files
 
 import (
 	"fmt"
-	"github.com/gofiber/fiber/v2"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func (r handler) Upload(app *fiber.Ctx) error {
@@ -26,6 +27,6 @@ func (r handler) Upload(app *fiber.Ctx) error {
 	}
 
 	return app.Status(http.StatusOK).JSON(&fiber.Map{
-		"url": "http://localhost:3000/" + file.Filename,
+		"url": "https://dentshow-api.up.railway.app/" + file.Filename,
 	})
 }
