@@ -17,10 +17,9 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"github.com/gofiber/swagger"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
-	"github.com/gofiber/swagger"
-	_ "github.com/anliben/dentsow-go/docs"
 )
 
 func getPort() string {
