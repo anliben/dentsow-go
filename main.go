@@ -19,6 +19,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
+	"github.com/gofiber/swagger"
+	_ "github.com/anliben/dentsow-go/docs"
 )
 
 func getPort() string {
@@ -62,6 +64,8 @@ func main() {
 	files.RegisterRoutes(app, db)
 	utils.RegisterRoutes(app, db)
 	budget.RegisterRoutes(app, db)
+
+	app.Get("/swagger/*", swagger.HandlerDefault) // default
 
 	app.Listen(getPort())
 }
