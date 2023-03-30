@@ -120,7 +120,7 @@ type Budget struct {
 func (u *Budget) BeforeSave(tx *gorm.DB) (err error) {
 
 	resp, mercadopagoErr, err := mercadopago.CreatePayment(mercadopago.PaymentRequest{
-		ExternalReference: "0001",
+		ExternalReference: uuid.NewString(),
 		Items: []mercadopago.Item{
 			{
 				Title:     "Pagamento Dentshow - Orçamento",
@@ -140,18 +140,14 @@ func (u *Budget) BeforeSave(tx *gorm.DB) (err error) {
 		NotificationURL: "https://dentshow-api.up.railway.app/webhook/mercadopago",
 	}, "TEST-3692262666358677-033011-1bf16959d504fa3072556d236bc3134f-425659019")
 
-	if err != nil {
-		return err
-	} else if mercadopagoErr != nil {
-		return err
-	}
-
 	u.Paymentid = resp.ID
 	u.Situacao = "PENDING"
 	u.Data = resp.DateCreated.String()
 	u.Linkpagamento = resp.SandboxInitPoint
 
 	if err != nil {
+		return err
+	} else if mercadopagoErr != nil {
 		return err
 	}
 
