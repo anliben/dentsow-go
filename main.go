@@ -3,6 +3,7 @@ package main
 import (
 	"fiber/internal/database"
 	"fiber/pkg/budget"
+	"fiber/pkg/common/models"
 	"fiber/pkg/customer"
 	"fiber/pkg/files"
 	"fiber/pkg/groups"
@@ -13,6 +14,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/eduardo-mior/mercadopago-sdk-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
@@ -66,12 +68,37 @@ func main() {
 
 	app.Get("/swagger/*", swagger.HandlerDefault) // default
 
-	app.Get("/webhook/mercadopago", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World GET 👋!")
-	})
-
 	app.Post("/webhook/mercadopago", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World Post 👋!")
+		var orcamento models.Budget
+
+		// pegar corpo da requisição
+		var webhookResponse mercadopago.WebhookResponse
+
+		err := c.BodyParser(&webhookResponse)
+
+		response, mercadopagoErr, err := mercadopago.ConsultPayment(webhookResponse.Data.ID, "TEST-3692262666358677-033011-1bf16959d504fa3072556d236bc3134f-425659019")
+
+		if err != nil {
+			// Erro inesperado
+		} else if mercadopagoErr != nil {
+			// Erro retornado do MercadoPago
+		} else {
+			// Sucesso!
+		}
+
+		err = db.Preload("Cliente").First(&orcamento).Where("cliente.cpf = ?", response.Payer.Identification.Number).Error
+
+		if err != nil {
+			return c.JSON(&fiber.Map{
+				"status": "error",
+			})
+		}
+
+		orcamento.Situacao = response.Status
+
+		db.Save(&orcamento)
+
+		return nil
 	})
 
 	mercado()
