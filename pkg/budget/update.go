@@ -30,7 +30,9 @@ func (r handler) Update(app *fiber.Ctx) error {
 		return err
 	}
 
-	err = r.Db.Model(&orcamento).UpdateColumns(models.Budget{}).Where("id = ?", id).Error
+	err = r.Db.Model(&orcamento).UpdateColumns(models.Budget{
+		Situacao: foo.Situacao,
+	}).Where("id = ?", id).Error
 
 	if err != nil {
 		app.Status(http.StatusBadGateway).JSON(&fiber.Map{
