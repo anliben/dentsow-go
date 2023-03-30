@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/eduardo-mior/mercadopago-sdk-go"
 	"github.com/google/uuid"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
@@ -117,26 +118,38 @@ type Budget struct {
 }
 
 func (u *Budget) BeforeSave(tx *gorm.DB) (err error) {
-	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
 
-	resp, err := pay.PaymentCreate(&asaas.Payment{
-		BillingType:       asaas.BillingType(u.FormaPagamento),
-		Value:             u.ValorTotal,
-		Description:       "Denshow",
-		Name:              "u.Cliente[0].Nome",
-		DueDateLimitDays:  5,
-		DueDate:           u.Data,
-		ChargeType:        "DETACHED",
-		Customer:          "u.Cliente[0].Assasid",
-		ExternalReference: "u.Cliente[0].Prontuario",
-		NextDueDate:       u.Data,
-		SubscriptionCycle: api.SubscriptionCycle(1),
-	})
+	resp, mercadopagoErr, err := mercadopago.CreatePayment(mercadopago.PaymentRequest{
+		ExternalReference: "0001",
+		Items: []mercadopago.Item{
+			{
+				Title:     "Pagamento Dentshow - Orçamento",
+				Quantity:  1,
+				UnitPrice: u.ValorTotal,
+			},
+		},
+		Payer: mercadopago.Payer{
+			Identification: mercadopago.PayerIdentification{
+				Type:   "CPF",
+				Number: u.Cliente.Cpf,
+			},
+			Name:    u.Cliente.Nome,
+			Surname: "Mior",
+			Email:   u.Cliente.Email,
+		},
+		NotificationURL: "https://dentshow-api.up.railway.app/webhook/mercadopago",
+	}, "TEST-3692262666358677-033011-1bf16959d504fa3072556d236bc3134f-425659019")
 
-	u.Paymentid = resp.Id
+	if err != nil {
+		return err
+	} else if mercadopagoErr != nil {
+		return err
+	}
+
+	u.Paymentid = resp.ID
 	u.Situacao = "PENDING"
-	u.Data = resp.DateCreated
-	u.NetValue = resp.NetValue
+	u.Data = resp.DateCreated.String()
+	u.Linkpagamento = resp.SandboxInitPoint
 
 	if err != nil {
 		return err
