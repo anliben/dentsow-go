@@ -86,18 +86,15 @@ func main() {
 			// Sucesso!
 		}
 
-		err = db.Preload("Cliente").First(&orcamento).Where("cliente.cpf = ?", response.Payer.Identification.Number).Error
+		err = db.First(&orcamento).UpdateColumns(models.Budget{
+			Situacao: response.Status,
+		}).Where("Paymentid = ?", webhookResponse.Data.ID).Error
 
 		if err != nil {
 			return c.JSON(&fiber.Map{
 				"status": "error",
 			})
 		}
-
-		orcamento.Situacao = response.Status
-
-		db.Save(&orcamento)
-
 		return nil
 	})
 
@@ -107,35 +104,7 @@ func main() {
 }
 
 func mercado() {
-	// response, mercadopagoErr, err := mercadopago.CreatePayment(mercadopago.PaymentRequest{
-	// 	ExternalReference: "0001",
-	// 	Items: []mercadopago.Item{
-	// 		{
-	// 			Title:     "Pagamendo mensalidade PagueTry",
-	// 			Quantity:  1,
-	// 			UnitPrice: 50,
-	// 		},
-	// 	},
-	// 	Payer: mercadopago.Payer{
-	// 		Identification: mercadopago.PayerIdentification{
-	// 			Type:   "CPF",
-	// 			Number: "12345678909",
-	// 		},
-	// 		Name:    "Eduardo",
-	// 		Surname: "Mior",
-	// 		Email:   "eduardo-mior@hotmail.com",
-	// 	},
-	// 	NotificationURL: "https://localhost/webhook/mercadopago",
-	// }, "TEST-3692262666358677-033011-1bf16959d504fa3072556d236bc3134f-425659019")
-
-	// if err != nil {
-	// 	// Erro inesperado
-	// } else if mercadopagoErr != nil {
-	// 	// Erro retornado do MercadoPago
-	// }
-
-	// fmt.Println(response)
-
+	//
 }
 
 func runner() {
