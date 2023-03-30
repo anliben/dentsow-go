@@ -151,7 +151,7 @@ func (u *Budget) BeforeSave(tx *gorm.DB) (err error) {
 		return err
 	}
 
-	return nil
+	return err
 }
 
 type User struct {
