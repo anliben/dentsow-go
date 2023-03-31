@@ -10,7 +10,7 @@ import (
 func (r handler) GetById(app *fiber.Ctx) error {
 	var orcamento models.Budget
 
-	err := r.Db.Preload("Cliente").Preload("Arquivos").Preload("Procedure").Preload("ValorProposta").Find(&orcamento).Where("id = ?", app.Params("id")).First(&orcamento).Error
+	err := r.Db.Preload("Cliente").Preload("Arquivos").Preload("Procedure").Preload("ValorProposta").Find(&orcamento, app.Params("id")).Error
 
 	if err != nil {
 		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{

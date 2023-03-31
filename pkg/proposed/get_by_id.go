@@ -2,8 +2,9 @@ package proposed
 
 import (
 	"fiber/pkg/common/models"
-	"github.com/gofiber/fiber/v2"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func (r handler) GetById(app *fiber.Ctx) error {
@@ -17,7 +18,7 @@ func (r handler) GetById(app *fiber.Ctx) error {
 		return nil
 	}
 
-	err := r.Db.Where("id = ?", id).First(&proposed).Error
+	err := r.Db.Find(&proposed, id).Error
 
 	if err != nil {
 		app.Status(http.StatusNotFound).JSON(&fiber.Map{

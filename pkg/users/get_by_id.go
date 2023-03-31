@@ -19,7 +19,7 @@ func (r handler) GetById(app *fiber.Ctx) error {
 		return nil
 	}
 
-	err := r.Db.Preload("Groups").Where("id = ?", id).First(&user).Error
+	err := r.Db.Preload("Groups").Find(&user, id).Error
 
 	if err != nil {
 		app.Status(http.StatusNotFound).JSON(&fiber.Map{

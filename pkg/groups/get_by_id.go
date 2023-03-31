@@ -10,7 +10,7 @@ import (
 func (r handler) GetById(app *fiber.Ctx) error {
 	var grupos models.Groups
 
-	err := r.Db.Find(&grupos).Where("id = ?", app.Params("id")).First(&grupos).Error
+	err := r.Db.Find(&grupos, app.Params("id")).Error
 
 	if err != nil {
 		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
