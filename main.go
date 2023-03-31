@@ -3,7 +3,6 @@ package main
 import (
 	"fiber/internal/database"
 	"fiber/pkg/budget"
-	"fiber/pkg/common/models"
 	"fiber/pkg/customer"
 	"fiber/pkg/files"
 	"fiber/pkg/groups"
@@ -14,12 +13,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/eduardo-mior/mercadopago-sdk-go"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
-	"github.com/gofiber/swagger"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
 )
@@ -66,49 +63,13 @@ func main() {
 	utils.RegisterRoutes(app, db)
 	budget.RegisterRoutes(app, db)
 
-	app.Get("/swagger/*", swagger.HandlerDefault) // default
-
-	app.Post("/webhook/mercadopago", func(c *fiber.Ctx) error {
-		var orcamento models.Budget
-
-		// pegar corpo da requisição
-		var webhookResponse mercadopago.WebhookResponse
-
-		err := c.BodyParser(&webhookResponse)
-
-		response, mercadopagoErr, err := mercadopago.ConsultPayment(webhookResponse.Data.ID, "TEST-3692262666358677-033011-1bf16959d504fa3072556d236bc3134f-425659019")
-
-		if err != nil {
-			// Erro inesperado
-		} else if mercadopagoErr != nil {
-			// Erro retornado do MercadoPago
-		} else {
-			// Sucesso!
-		}
-
-		err = db.First(&orcamento).UpdateColumns(models.Budget{
-			Situacao: response.Status,
-		}).Where("Paymentid = ?", webhookResponse.Data.ID).Error
-
-		if err != nil {
-			return c.JSON(&fiber.Map{
-				"status": "error",
-			})
-		}
-		return nil
-	})
-
-	mercado()
+	// runner()
 
 	app.Listen(getPort())
 }
 
-func mercado() {
-	//
-}
-
 func runner() {
-	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
+	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzYxNWM0YTVlLWZhNzUtNGZjYy1iMGFiLThkNDVmODJmY2Y2OQ==", api.AsaasModeTest)
 
 	resp, _ := pay.PaymentCreate(&asaas.Payment{
 		BillingType:       "UNDEFINED",

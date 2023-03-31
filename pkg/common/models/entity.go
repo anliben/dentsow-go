@@ -1,7 +1,9 @@
 package models
 
 import (
-	"github.com/eduardo-mior/mercadopago-sdk-go"
+	"fiber/internal/database"
+	"fmt"
+
 	"github.com/google/uuid"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
@@ -54,15 +56,15 @@ type Customer struct {
 	Midia               []Files `gorm:"many2many:customer_midias;"  json:"midias"`
 }
 
-func (u *Customer) BeforeSave(tx *gorm.DB) (err error) {
+func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 	uuid := uuid.New()
 	if u.Prontuario == "" {
 		u.Prontuario = uuid.String()
 	}
 
-	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
+	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzYxNWM0YTVlLWZhNzUtNGZjYy1iMGFiLThkNDVmODJmY2Y2OQ==", api.AsaasModeTest)
 
-	resp, _ := pay.CustomerCreate(&asaas.Customer{
+	resp, err := pay.CustomerCreate(&asaas.Customer{
 		Name:                 u.Nome,
 		CpfCnpj:              u.Cpf,
 		Email:                u.Email,
@@ -70,6 +72,10 @@ func (u *Customer) BeforeSave(tx *gorm.DB) (err error) {
 		NotificationDisabled: false,
 		ExternalReference:    u.Prontuario,
 	})
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	u.Assasid = resp.Id
 
@@ -117,39 +123,49 @@ type Budget struct {
 	NetValue       float64         `json:"valor_liquido"`
 }
 
-func (u *Budget) BeforeSave(tx *gorm.DB) (err error) {
+func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
+	var cliente Customer
+	db, _ := database.OpenConnection()
 
-	resp, mercadopagoErr, err := mercadopago.CreatePayment(mercadopago.PaymentRequest{
-		ExternalReference: uuid.NewString(),
-		Items: []mercadopago.Item{
-			{
-				Title:     "Pagamento Dentshow - Orçamento",
-				Quantity:  1,
-				UnitPrice: u.ValorTotal,
-			},
-		},
-		Payer: mercadopago.Payer{
-			Identification: mercadopago.PayerIdentification{
-				Type:   "CPF",
-				Number: u.Cliente.Cpf,
-			},
-			Name:    u.Cliente.Nome,
-			Surname: "Mior",
-			Email:   u.Cliente.Email,
-		},
-		NotificationURL: "https://dentshow-api.up.railway.app/webhook/mercadopago",
-	}, "TEST-3692262666358677-033011-1bf16959d504fa3072556d236bc3134f-425659019")
+	err = db.Find(&cliente, u.ClienteRefer).Error
 
-	u.Paymentid = resp.ID
-	u.Situacao = "PENDING"
-	u.Data = resp.DateCreated.String()
-	u.Linkpagamento = resp.SandboxInitPoint
+	fmt.Println(u.ClienteRefer)
+	fmt.Println(cliente.ID)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzYxNWM0YTVlLWZhNzUtNGZjYy1iMGFiLThkNDVmODJmY2Y2OQ==", api.AsaasModeTest)
+
+	resp, err := pay.PaymentCreate(&asaas.Payment{
+		BillingType:       asaas.BillingType(u.FormaPagamento),
+		Value:             u.ValorTotal,
+		Description:       "Denshow - Orçamento",
+		Name:              cliente.Nome,
+		DueDateLimitDays:  5,
+		DueDate:           u.Data,
+		ChargeType:        "DETACHED",
+		Customer:          cliente.Assasid,
+		ExternalReference: cliente.Prontuario,
+		NextDueDate:       u.Data,
+		SubscriptionCycle: api.SubscriptionCycle(1),
+	})
 
 	if err != nil {
 		return err
-	} else if mercadopagoErr != nil {
-		return err
 	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println(resp)
+	fmt.Println("-----------------------------")
+
+	u.Paymentid = resp.Id
+	u.Situacao = "PENDING"
+	u.Data = resp.DateCreated
+	u.NetValue = resp.NetValue
+	u.Linkpagamento = resp.InvoiceUrl
+	u.BankSlipUrl = resp.BankSlipUrl
 
 	return err
 }
