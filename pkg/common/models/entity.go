@@ -62,7 +62,7 @@ func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 		u.Prontuario = uuid.String()
 	}
 
-	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzYxNWM0YTVlLWZhNzUtNGZjYy1iMGFiLThkNDVmODJmY2Y2OQ==", api.AsaasModeTest)
+	pay := asaas.NewAsaas("BRL", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTAxMTE6OiRhYWNoX2EzZGNmMDY1LWM0MWYtNDg4OC05ZjNlLTRmOGVlNTczMjQyMw==", api.AsaasModeProd)
 
 	resp, err := pay.CustomerCreate(&asaas.Customer{
 		Name:                 u.Nome,
@@ -136,7 +136,7 @@ func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
 		fmt.Println(err)
 	}
 
-	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzYxNWM0YTVlLWZhNzUtNGZjYy1iMGFiLThkNDVmODJmY2Y2OQ==", api.AsaasModeTest)
+	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTAxMTE6OiRhYWNoX2EzZGNmMDY1LWM0MWYtNDg4OC05ZjNlLTRmOGVlNTczMjQyMw==", api.AsaasModeProd)
 
 	resp, err := pay.PaymentCreate(&asaas.Payment{
 		BillingType:       asaas.BillingType(u.FormaPagamento),

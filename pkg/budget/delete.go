@@ -2,13 +2,13 @@ package budget
 
 import (
 	"fiber/pkg/common/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func (r handler) Delete(app *fiber.Ctx) error {
-	var orcamento models.Budget
 
 	id := app.Params("id")
 
@@ -19,13 +19,19 @@ func (r handler) Delete(app *fiber.Ctx) error {
 		return nil
 	}
 
-	err := r.Db.Where("id = ?", id).Delete(&orcamento).Error
+	resp := r.Db.Raw("DELETE budget_propostas WHERE budget_id = ?", id)
+
+	fmt.Println(resp)
+
+	err := r.Db.Delete(&models.Budget{}, id).Error
 
 	if err != nil {
-		app.Status(http.StatusNotFound).JSON(&fiber.Map{
-			"message": "Orcamento not found",
+		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
+			"detail": "Orcamento nao excluido",
+			"error":  err.Error(),
 		})
 		return err
 	}
+
 	return app.Status(http.StatusNoContent).JSON(&fiber.Map{})
 }

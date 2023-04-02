@@ -2,7 +2,6 @@ package utils
 
 import (
 	"fiber/pkg/common/models"
-	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -10,27 +9,26 @@ import (
 	"github.com/mobilemindtec/go-payments/asaas"
 )
 
-type Cartao struct {
-	Maquina string
-	X       string
-	Juros   int
-	Total   string
-	Liquido string
-	Status  string
-}
-
-type Pix struct {
-	Total  float64
-	Pago   float64
-	Status string
-}
-
 type Caixa struct {
-	Data       string
-	Prontuario string
-	Credito    Cartao
-	Debito     Cartao
-	Pix        Pix
+	Data              string
+	Prontuario        string
+	ClienteAssas      string
+	Status            string
+	Total             float64
+	X                 int64
+	Juros             float64
+	Liquido           float64
+	TipoPagamento     string
+	Descricao         string
+	Vencimento        string
+	UrlRecebimento    string
+	DataDaConfirmacao string
+	Discount          float64
+	Multas            float64
+}
+
+type PaymentNotFound struct {
+	IDPaymentNotFound string
 }
 
 func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
@@ -51,53 +49,42 @@ func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
 		return err
 	}
 
-	caixa := Caixa{}
 	listCaixa := []Caixa{}
+	listPayNotFound := []PaymentNotFound{}
 
-	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAwNTIxMTY6OiRhYWNoXzJiN2M1YzI0LTNmYjktNDE4Ni04NmM3LTQzNzUxYzhjNGFhYw==", api.AsaasModeTest)
+	pay := asaas.NewAsaas("BRL", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTAxMTE6OiRhYWNoX2EzZGNmMDY1LWM0MWYtNDg4OC05ZjNlLTRmOGVlNTczMjQyMw==", api.AsaasModeProd)
 
 	for index, item := range orcamento {
-		p, err := pay.PaymentGet(item.Paymentid)
+		p, _ := pay.PaymentGet(item.Paymentid)
 
-		if err != nil {
-			fmt.Println(err)
-			return nil
-		}
+		// if err != nil {
+		// listPayNotFound = append(listPayNotFound, PaymentNotFound{IDPaymentNotFound: item.Paymentid})
+		// return nil
+		// }
 
-		fmt.Println(p)
-
-		if p.BillingType == "BOLETO" || p.BillingType == "PIX" || p.BillingType == "UNDEFINED" {
-			caixa = Caixa{
-				Data:       p.DueDate,
-				Prontuario: "item.Cliente[0].Prontuario",
-				Pix: Pix{
-					Total:  p.OriginalValue,
-					Pago:   p.TotalBalance,
-					Status: p.StatusText,
-				},
-			}
-		}
-
-		if p.BillingType == "CREDIT_CARD" {
-			caixa = Caixa{
-				Data:       p.DueDate,
-				Prontuario: "item.Cliente[index].Prontuario",
-				Credito: Cartao{
-					X:      item.ValorProposta[index].X,
-					Juros:  item.ValorProposta[index].Addition,
-					Total:  p.OriginalDueDate,
-					Status: p.StatusText,
-				},
-			}
+		caixa := Caixa{
+			Data:              item.Data,
+			Prontuario:        item.Cliente.Prontuario,
+			X:                 p.InstallmentCount,
+			Status:            orcamento[index].Situacao,
+			TipoPagamento:     string(p.BillingType),
+			Descricao:         p.Description,
+			Vencimento:        p.OriginalDueDate,
+			DataDaConfirmacao: p.ConfirmedDate,
+			ClienteAssas:      p.Customer,
+			Total:             item.ValorTotal,
+			Juros:             p.Interest.Value,
+			Liquido:           p.NetValue,
+			Discount:          p.Discount.Value,
+			Multas:            p.Fine.Value,
 		}
 
 		listCaixa = append(listCaixa, caixa)
 	}
 
-	fmt.Println(listCaixa)
-
 	return app.JSON(&fiber.Map{
-		"count": len(orcamento),
-		"items": listCaixa,
+		"count":           len(orcamento),
+		"items":           listCaixa,
+		"paymentNotFound": listPayNotFound,
 	})
 }
