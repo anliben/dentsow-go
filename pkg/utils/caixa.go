@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fiber/pkg/common/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -29,6 +30,24 @@ type Caixa struct {
 
 type PaymentNotFound struct {
 	IDPaymentNotFound string
+}
+
+type CaixaFechamento struct {
+	TotalDebitoLiquido float64
+	TotalDebitoBruto   float64
+
+	TotalCartaoLiquido float64
+	TotalCartaoBruto   float64
+	TotalCartaoTaxa    float64
+
+	TotalDinheiro float64
+	TotalLiquido  float64
+
+	QuantidadeCartao   int64
+	QuantidadePix      int64
+	QuantidadeDinheiro int64
+
+	TotalReceber int64
 }
 
 func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
@@ -61,6 +80,10 @@ func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
 		// listPayNotFound = append(listPayNotFound, PaymentNotFound{IDPaymentNotFound: item.Paymentid})
 		// return nil
 		// }
+
+		for index, item := range item.Procedure {
+			fmt.Println(index, item)
+		}
 
 		caixa := Caixa{
 			Data:              item.Data,

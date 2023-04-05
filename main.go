@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fiber/internal/database"
 	"fiber/pkg/budget"
 	"fiber/pkg/customer"
@@ -33,7 +34,10 @@ func getPort() string {
 }
 
 func main() {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		JSONEncoder: json.Marshal,
+		JSONDecoder: json.Unmarshal,
+	})
 	app.Static("/", "./public")
 
 	app.Use(recover.New())

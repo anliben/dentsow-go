@@ -21,7 +21,8 @@ type ProposedValue struct {
 
 type Files struct {
 	gorm.Model
-	Url string `json:"url"`
+	Url      string `json:"url"`
+	Filename string `json:"filename"`
 }
 
 type Customer struct {
@@ -129,9 +130,6 @@ func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
 
 	err = db.Find(&cliente, u.ClienteRefer).Error
 
-	fmt.Println(u.ClienteRefer)
-	fmt.Println(cliente.ID)
-
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -155,10 +153,6 @@ func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println("-----------------------------")
-	fmt.Println(resp)
-	fmt.Println("-----------------------------")
 
 	u.Paymentid = resp.Id
 	u.Situacao = "PENDING"
