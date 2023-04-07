@@ -46,6 +46,7 @@ func (r handler) Upload(app *fiber.Ctx) error {
 			}
 		}
 	}
+
 	return app.Status(http.StatusOK).JSON(&fiber.Map{
 		"items": arr_file,
 	})

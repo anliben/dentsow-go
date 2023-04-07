@@ -1,4 +1,4 @@
-package customer
+package files
 
 import (
 	"fiber/pkg/common/models"
@@ -8,10 +8,9 @@ import (
 )
 
 func (r handler) GetAll(app *fiber.Ctx) error {
-	var customer []models.Customer
+	var files []models.Files
 	err := r.Db.
-		Preload("Midia").
-		Find(&customer).Error
+		Find(&files).Error
 
 	if err != nil {
 		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
@@ -21,9 +20,9 @@ func (r handler) GetAll(app *fiber.Ctx) error {
 	}
 
 	return app.JSON(&fiber.Map{
-		"count":    len(customer),
+		"count":    len(files),
 		"next":     "null",
 		"previous": "null",
-		"items":    customer,
+		"items":    files,
 	})
 }
