@@ -5,11 +5,15 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"gorm.io/gorm"
 )
 
 func (r handler) GetAll(app *fiber.Ctx) error {
 	var files []models.Files
-	err := r.Db.
+	
+	tx := r.Db.Session(&gorm.Session{PrepareStmt: true})
+
+	err := tx.
 		Find(&files).Error
 
 	if err != nil {

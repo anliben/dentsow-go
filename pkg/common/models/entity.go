@@ -29,16 +29,16 @@ type Customer struct {
 	gorm.Model
 	Nome                string  `json:"nome"`
 	DataNascimento      string  `json:"data_nascimento"`
-	Cpf                 string  `json:"cpf"`
-	Rg                  string  `json:"rg"`
-	Email               string  `json:"email"`
-	Idade               int     `json:"idade"`
+	Cpf                 string  `json:"cpf" gorm:"unique; not null;" validate:"required"`
+	Rg                  string  `json:"rg" gorm:"unique; not null;" validate:"required"`
+	Email               string  `json:"email" gorm:"unique" validate:"email,omitempty,required" structs:"email,omitempty"`
+	Idade               int     `json:"idade" validate:"required"`
 	Foto                string  `json:"foto"`
 	EstadoCivil         string  `json:"estado_civil"`
 	Sexo                string  `json:"sexo"`
 	Celular             string  `json:"celular"`
 	Telefone            string  `json:"telefone"`
-	Cep                 string  `json:"cep"`
+	Cep                 string  `json:"cep" validate:"required"`
 	Logradouro          string  `json:"logradouro"`
 	Numero              string  `json:"numero"`
 	Complemento         string  `json:"complemento"`
@@ -85,30 +85,30 @@ func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 
 type Groups struct {
 	gorm.Model
-	Nome string `json:"nome"`
+	Nome string `json:"nome" validate:"required"`
 }
 
 type Procedure struct {
 	gorm.Model
-	Name     string `json:"nome"`
-	Price    string `json:"preco"`
-	Category string `json:"categoria"`
+	Name     string `json:"nome" validate:"required"`
+	Price    string `json:"preco" validate:"required"`
+	Category string `json:"categoria" validate:"required"`
 }
 
 type Data struct {
 	gorm.Model
-	Dia int `json:"dia"`
-	Mes int `json:"mes"`
-	Ano int `json:"ano"`
+	Dia int `json:"dia" validate:"required"`
+	Mes int `json:"mes" validate:"required"`
+	Ano int `json:"ano" validate:"required"`
 }
 
 type Budget struct {
 	gorm.Model
 	DataRefer      int             `json:"data_refer"`
-	Data           string          `json:"data"`
+	Data           string          `json:"data" validate:"required"`
 	Situacao       string          `json:"situacao"`
 	Anotacoes      string          `json:"anotacoes"`
-	FormaPagamento string          `json:"forma_pagamento"`
+	FormaPagamento string          `json:"forma_pagamento" validate:"required"`
 	VendedorRefer  int             `json:"vendedor_referer"`
 	ClienteRefer   int             `json:"cliente_refer"`
 	Cliente        Customer        `gorm:"foreignKey:VendedorRefer;"  json:"cliente"`
@@ -117,7 +117,7 @@ type Budget struct {
 	Procedure      []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
 	ValorProposta  []ProposedValue `gorm:"many2many:budget_propostas;" json:"valores_proposta"`
 	Paymentid      string          `json:"paymentid"`
-	ValorTotal     float64         `json:"valor_total"`
+	ValorTotal     float64         `json:"valor_total" validate:"required"`
 	Linkpagamento  string          `json:"link_pagamento"`
 	InvoiceUrl     string          `json:"link_nota"`
 	BankSlipUrl    string          `json:"link_boleto"`
@@ -166,12 +166,12 @@ func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
 
 type User struct {
 	gorm.Model
-	Username  string   `json:"username"`
-	FirstName string   `json:"first_name"`
-	LastName  string   `json:"last_name"`
-	Email     string   `json:"email"`
-	Password  string   `json:"password"`
-	IsStaff   bool     `json:"is_staff"`
+	Username  string   `json:"username" validate:"required" gorm:"unique"`
+	FirstName string   `json:"first_name" validate:"required"`
+	LastName  string   `json:"last_name" validate:"required"`
+	Email     string   `json:"email" gorm:"unique" validate:"email,omitempty,required" structs:"email,omitempty"`
+	Password  string   `json:"password" validate:"required"`
+	IsStaff   bool     `json:"is_staff" validate:"required"`
 	IsActive  bool     `json:"is_active"`
 	Groups    []Groups `gorm:"many2many:user_groups;" json:"grupos"`
 }

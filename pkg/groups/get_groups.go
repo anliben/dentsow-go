@@ -9,7 +9,6 @@ import (
 func (r handler) GetGrupos(app *fiber.Ctx) error {
 
 	var grupos []models.Groups
-
 	err := r.Db.Find(&grupos).Error
 
 	if err != nil {
