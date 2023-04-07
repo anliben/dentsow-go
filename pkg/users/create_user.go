@@ -2,8 +2,9 @@ package users
 
 import (
 	"fiber/pkg/common/models"
-	"github.com/gofiber/fiber/v2"
 	"net/http"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func (r handler) UserCreateOne(app *fiber.Ctx) error {
@@ -16,6 +17,12 @@ func (r handler) UserCreateOne(app *fiber.Ctx) error {
 			"message": "Invalid data",
 		})
 		return err
+	}
+
+	errors := models.ValidateStruct(user)
+	if errors != nil {
+		return app.Status(fiber.StatusBadRequest).JSON(errors)
+
 	}
 
 	err = r.Db.Create(&user).Error

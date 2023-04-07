@@ -4,6 +4,7 @@ import (
 	"fiber/internal/database"
 	"fmt"
 
+	"github.com/go-playground/validator"
 	"github.com/google/uuid"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
@@ -174,4 +175,27 @@ type User struct {
 	IsStaff   bool     `json:"is_staff" validate:"required"`
 	IsActive  bool     `json:"is_active"`
 	Groups    []Groups `gorm:"many2many:user_groups;" json:"grupos"`
+}
+
+var validate = validator.New()
+
+func ValidateStruct(item interface{}) []*ErrorResponse {
+	var errors []*ErrorResponse
+	err := validate.Struct(item)
+	if err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			var element ErrorResponse
+			element.FailedField = err.StructNamespace()
+			element.Tag = err.Tag()
+			element.Value = err.Param()
+			errors = append(errors, &element)
+		}
+	}
+	return errors
+}
+
+type ErrorResponse struct {
+	FailedField string
+	Tag         string
+	Value       string
 }

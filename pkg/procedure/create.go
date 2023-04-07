@@ -19,6 +19,12 @@ func (r handler) Create(app *fiber.Ctx) error {
 		return err
 	}
 
+	
+	errors := models.ValidateStruct(procedure)
+	if errors != nil {
+		return app.Status(fiber.StatusBadRequest).JSON(errors)
+	}
+
 	err = r.Db.Create(&procedure).Error
 
 	if err != nil {
