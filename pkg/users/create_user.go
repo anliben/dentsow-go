@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (r handler) UserCreateOne(app *fiber.Ctx) error {
@@ -24,6 +25,17 @@ func (r handler) UserCreateOne(app *fiber.Ctx) error {
 		return app.Status(fiber.StatusBadRequest).JSON(errors)
 
 	}
+
+	password, bcErr := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+	if bcErr != nil {
+		err = app.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"detail": "Erro ao criptografar senha!",
+			"error":  err.Error(),
+		})
+		return err
+	}
+
+	user.Password = string(password)
 
 	err = r.Db.Create(&user).Error
 

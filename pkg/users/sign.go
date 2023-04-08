@@ -7,6 +7,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserResponse struct {
@@ -19,22 +20,33 @@ func (r *handler) Sign(app *fiber.Ctx) error {
 	userq := new(UserResponse)
 
 	if err := app.BodyParser(userq); err != nil {
-		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
-			"message": "Invalid credentials",
+		err = app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
+			"detail": "Verifique os dados enviados!",
+			"error":  err.Error(),
 		})
-		return nil
+		return err
 	}
 
-	err := r.Db.Where("username = ? and password = ?", userq.Username, userq.Password).First(&user).Error
+	err := r.Db.Where("username = ?", userq.Username).First(&user).Error
 
 	if err != nil {
-		app.Status(http.StatusNotFound).JSON(&fiber.Map{
-			"message": err,
+		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
+			"detail": "Usuario não encontrado!",
+			"error":  err.Error(),
 		})
-		return nil
+		return err
 	}
 
-	exp := time.Now().Add(time.Minute * 30).Unix()
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userq.Password))
+
+	if err != nil {
+		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
+			"detail": "Verifique sua Senha!",
+		})
+		return err
+	}
+
+	exp := time.Now().Add(time.Hour * 5).Unix()
 
 	claims := jwt.MapClaims{
 		"name":  user.Username,
