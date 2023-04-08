@@ -28,8 +28,8 @@ func Setup() error {
 	app.Use(recover.New())
 	app.Use(users.AuthMiddleware, cors.New(cors.Config{
 		AllowOrigins:     "*",
-		AllowHeaders:     "",
-		AllowCredentials: false,
+		AllowHeaders: "Access-Control-Allow-Origin, Content-Type, Origin, Accept",
+		AllowCredentials: true,
 	}))
 
 	app.Use(compress.New(compress.Config{

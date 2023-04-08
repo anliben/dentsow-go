@@ -24,7 +24,7 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	}
 
 	store = session.New(session.Config{
-//		CookieHTTPOnly: true,
+		CookieHTTPOnly: true,
 		CookieSecure:   true,
 		Expiration: time.Hour * 160,
 	})
