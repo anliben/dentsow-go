@@ -25,8 +25,8 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 
 	store = session.New(session.Config{
 		CookieHTTPOnly: true,
-		CookieSecure:   true,
-		Expiration:     time.Hour * 160,
+		//CookieSecure:   true,
+		Expiration: time.Hour * 160,
 	})
 
 	routes := app.Group("/api/v1/users")
