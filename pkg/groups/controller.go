@@ -1,6 +1,8 @@
 package groups
 
 import (
+	"fiber/pkg/users"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -15,6 +17,7 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	}
 
 	routes := app.Group("/api/v1/grupos")
+	routes.Use(users.AuthMiddleware)
 	routes.Get("/", r.GetGrupos)
 	routes.Get("/:id", r.GetById)
 	routes.Post("/", r.Create)

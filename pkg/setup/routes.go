@@ -26,14 +26,9 @@ func Setup() error {
 	})
 
 	app.Use(recover.New())
-	// app.Use(users.AuthMiddleware, cors.New(cors.Config{
-	// 	AllowOrigins:     "*",
-	// 	AllowHeaders:     "",
-	// 	AllowCredentials: true,
-	// }))
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
+		AllowOrigins:     "http://localhost:4200,https://dentshow-web.up.railway.app",
 		AllowHeaders:     "",
 		AllowCredentials: true,
 	}))

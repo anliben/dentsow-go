@@ -1,6 +1,8 @@
 package proposed
 
 import (
+	"fiber/pkg/users"
+
 	"github.com/gofiber/fiber/v2"
 	"gorm.io/gorm"
 )
@@ -15,6 +17,7 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	}
 
 	routes := app.Group("/api/v1/proposta")
+	routes.Use(users.AuthMiddleware)
 	routes.Get("/", r.GetAll)
 	routes.Post("/", r.Create)
 	routes.Get("/:id", r.GetById)

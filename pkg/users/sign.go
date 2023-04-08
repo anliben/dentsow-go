@@ -77,6 +77,7 @@ func (r *handler) Sign(app *fiber.Ctx) error {
 	}
 
 	sess.Set(REFRESH, true)
+	cookie := sess.Get(REFRESH)
 
 	sessErr = sess.Save()
 	if sessErr != nil {
@@ -85,5 +86,5 @@ func (r *handler) Sign(app *fiber.Ctx) error {
 		})
 	}
 
-	return app.JSON(fiber.Map{"access": t, "exp": exp, "user": user})
+	return app.JSON(fiber.Map{"access": t, "exp": exp, "user": user, "cookie": cookie})
 }
