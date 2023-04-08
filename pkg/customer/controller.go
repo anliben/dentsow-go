@@ -19,9 +19,9 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 
 	routes := app.Group("/api/v1/clientes")
 	routes.Use(users.AuthMiddleware, cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowHeaders:     "",
 		AllowCredentials: true,
+		AllowOrigins:     "*",
+		AllowHeaders:     "Access-Control-Allow-Origin, Content-Type, Origin, Accept",
 	}))
 	routes.Get("/", r.GetAll)
 	routes.Post("/", r.Create)
