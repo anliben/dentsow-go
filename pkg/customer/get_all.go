@@ -10,7 +10,9 @@ import (
 
 func (r handler) GetAll(app *fiber.Ctx) error {
 	var customer []models.Customer
+	
 	tx := r.Db.Session(&gorm.Session{PrepareStmt: true})
+
 	err := tx.
 		Preload("Midia").
 		Find(&customer).Error

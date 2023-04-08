@@ -30,7 +30,6 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	})
 
 	routes := app.Group("/api/v1/users")
-	// routes.Use(AuthMiddleware)
 	routes.Get("/", r.UserGetAll)
 	routes.Get("/:id", r.GetById)
 	routes.Post("/", r.UserCreateOne)
@@ -45,19 +44,19 @@ func AuthMiddleware(c *fiber.Ctx) error {
 
 	sess, err := store.Get(c)
 
-	if strings.Split(c.Path(), "/")[1] == "jwt/create" {
+	if strings.Join(strings.Split(c.Path(), "/"), "/") == "/api/v1/users/jwt/create" {
 		return c.Next()
 	}
 
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": "not authorized",
+			"message": "Atenção! Esta é uma zona restrita apenas para pessoas autorizadas. Se você não tem a senha secreta, é melhor ir pegar um café e tentar novamente mais tarde.",
 		})
 	}
 
 	if sess.Get(REFRESH) == nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
-			"message": "not authorized",
+			"message": "Atenção! Esta é uma zona restrita apenas para pessoas autorizadas. Se você não tem a senha secreta, é melhor ir pegar um café e tentar novamente mais tarde.",
 		})
 	}
 

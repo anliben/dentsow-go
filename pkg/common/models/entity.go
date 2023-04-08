@@ -171,7 +171,7 @@ type User struct {
 	FirstName string   `json:"first_name" validate:"required"`
 	LastName  string   `json:"last_name" validate:"required"`
 	Email     string   `json:"email" gorm:"unique" validate:"email,omitempty,required" structs:"email,omitempty"`
-	Password  string   `json:"password" validate:"required"`
+	Password  string   `json:"password" validate:"required,min=6,max=32"`
 	IsStaff   bool     `json:"is_staff" validate:"required"`
 	IsActive  bool     `json:"is_active"`
 	Groups    []Groups `gorm:"many2many:user_groups;" json:"grupos"`

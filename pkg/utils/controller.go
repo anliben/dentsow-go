@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/timeout"
 	"gorm.io/gorm"
 )
@@ -28,9 +29,11 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	}
 
 	routes := app.Group("/api/v1/utils")
+	app.Static("/", "./public")
+	routes.Get("/migrate", r.Migrate, timeout.New(h, 10*time.Second))
+	routes.Get("/metrics", monitor.New(monitor.Config{Title: "MyService Metrics Page"}))
 	routes.Get("/:table", r.GetCountIdTable)
 	routes.Get("/:mes/:ano", r.GetCaixaEnd, timeout.New(h, 10*time.Second))
-	routes.Get("/migrate", r.Migrate)
 }
 
 func sleepWithContext(ctx context.Context, d time.Duration) error {
