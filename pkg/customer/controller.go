@@ -1,7 +1,10 @@
 package customer
 
 import (
+	"fiber/pkg/users"
+
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"gorm.io/gorm"
 )
 
@@ -15,6 +18,11 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	}
 
 	routes := app.Group("/api/v1/clientes")
+	routes.Use(users.AuthMiddleware, cors.New(cors.Config{
+		AllowOrigins:     "*",
+		AllowHeaders:     "",
+		AllowCredentials: true,
+	}))
 	routes.Get("/", r.GetAll)
 	routes.Post("/", r.Create)
 	routes.Get("/:id", r.GetById)
