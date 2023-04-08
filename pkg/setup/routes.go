@@ -28,7 +28,13 @@ func Setup() error {
 	app.Use(recover.New())
 	app.Use(users.AuthMiddleware, cors.New(cors.Config{
 		AllowOrigins:     "*",
-		AllowHeaders: "Access-Control-Allow-Origin, Content-Type, Origin, Accept",
+		AllowHeaders:     "Access-Control-Allow-Origin, Content-Type, Origin, Accept",
+		AllowCredentials: true,
+	}))
+
+	app.Use(cors.New(cors.Config{
+		AllowOrigins:     "*",
+		AllowHeaders:     "Access-Control-Allow-Origin, Content-Type, Origin, Accept",
 		AllowCredentials: true,
 	}))
 
