@@ -27,20 +27,21 @@ func Setup() error {
 
 	app.Use(recover.New())
 	app.Use(users.AuthMiddleware, cors.New(cors.Config{
-		AllowOrigins:     "*",
+		AllowOrigins:     "https://dentshow-web.up.railway.app;https://dentshow-api.up.railway.app/",
 		AllowHeaders:     "",
-		AllowCredentials: false,
+		AllowCredentials: true,
 	}))
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
+		AllowOrigins:     "https://dentshow-web.up.railway.app;https://dentshow-api.up.railway.app/",
 		AllowHeaders:     "",
-		AllowCredentials: false,
+		AllowCredentials: true,
 	}))
 
 	app.Use(compress.New(compress.Config{
 		Level: compress.LevelBestCompression, // 2
 	}))
+
 	db, _ := database.OpenConnection()
 
 	users.RegisterRoutes(app, db)
