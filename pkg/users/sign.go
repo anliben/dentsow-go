@@ -69,5 +69,21 @@ func (r *handler) Sign(app *fiber.Ctx) error {
 		return err
 	}
 
+	sess, sessErr := store.Get(app)
+	if sessErr != nil {
+		return app.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"detail": "Nenhum refresh identificado" + err.Error(),
+		})
+	}
+
+	sess.Set(REFRESH, true)
+
+	sessErr = sess.Save()
+	if sessErr != nil {
+		return app.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"detail": "Nenhum refresh identificado" + err.Error(),
+		})
+	}
+
 	return app.JSON(fiber.Map{"access": t, "exp": exp, "user": user})
 }
