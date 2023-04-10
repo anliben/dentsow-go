@@ -19,10 +19,10 @@ func (r handler) Create(app *fiber.Ctx) error {
 		return err
 	}
 
-	errors := models.ValidateStruct(orcamento)
-	if errors != nil {
-		return app.Status(fiber.StatusBadRequest).JSON(errors)
-	}
+	// errors := models.ValidateStruct(orcamento)
+	// if errors != nil {
+	// 	return app.Status(fiber.StatusBadRequest).JSON(errors)
+	// }
 
 	err = r.Db.Create(&orcamento).Error
 
