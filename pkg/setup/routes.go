@@ -11,6 +11,7 @@ import (
 	"fiber/pkg/proposed"
 	"fiber/pkg/users"
 	"fiber/pkg/utils"
+	//"fiber/pkg/common/models"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,6 +19,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
+
+	
 
 func Setup() error {
 	app := fiber.New(fiber.Config{
@@ -38,6 +41,15 @@ func Setup() error {
 	}))
 
 	db, _ := database.OpenConnection()
+	
+	//db.AutoMigrate(&models.User{})
+	//db.AutoMigrate(&models.Budget{})
+	//db.AutoMigrate(&models.Customer{})
+	//db.AutoMigrate(&models.Data{})
+	//db.AutoMigrate(&models.Files{})
+	//db.AutoMigrate(&models.Groups{})
+	//db.AutoMigrate(&models.Procedure{})
+	//db.AutoMigrate(&models.ProposedValue{})
 
 	users.RegisterRoutes(app, db)
 	customer.RegisterRoutes(app, db)

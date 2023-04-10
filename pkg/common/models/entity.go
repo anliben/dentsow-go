@@ -112,7 +112,7 @@ type Budget struct {
 	FormaPagamento string          `json:"forma_pagamento" validate:"required"`
 	VendedorRefer  int             `json:"vendedor_referer"`
 	ClienteRefer   int             `json:"cliente_refer"`
-	Cliente        Customer        `gorm:"foreignKey:VendedorRefer;"  json:"cliente"`
+	Cliente        Customer        `gorm:"foreignKey:ClienteRefer;"  json:"cliente"`
 	Vendedor       User            `gorm:"foreignKey:VendedorRefer;"  json:"vendedor"`
 	Arquivos       []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
 	Procedure      []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
