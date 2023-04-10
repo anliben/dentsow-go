@@ -110,9 +110,9 @@ type Budget struct {
 	Situacao       string          `json:"situacao"`
 	Anotacoes      string          `json:"anotacoes"`
 	FormaPagamento string          `json:"forma_pagamento" validate:"required"`
-	VendedorRefer  int             `json:"vendedor_referer"`
 	ClienteRefer   int             `json:"cliente_refer"`
 	Cliente        Customer        `gorm:"foreignKey:ClienteRefer;"  json:"cliente"`
+	VendedorRefer  int             `json:"vendedor_referer"`
 	Vendedor       User            `gorm:"foreignKey:VendedorRefer;"  json:"vendedor"`
 	Arquivos       []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
 	Procedure      []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
@@ -171,7 +171,7 @@ type User struct {
 	FirstName string   `json:"first_name" validate:"required"`
 	LastName  string   `json:"last_name" validate:"required"`
 	Email     string   `json:"email" gorm:"unique" validate:"email,omitempty,required" structs:"email,omitempty"`
-	Password  string   `json:"password" validate:"required,min=6,max=32"`
+	Password  string   `json:"password" validate:"required,min=6"`
 	IsStaff   bool     `json:"is_staff" validate:"required"`
 	IsActive  bool     `json:"is_active"`
 	Groups    []Groups `gorm:"many2many:user_groups;" json:"grupos"`
