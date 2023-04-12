@@ -60,6 +60,7 @@ type Customer struct {
 
 func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 	uuid := uuid.New()
+
 	if len(u.Prontuario) == 0 {
 		u.Prontuario = uuid.String()
 	}
@@ -112,7 +113,7 @@ type Budget struct {
 	FormaPagamento string          `json:"forma_pagamento" validate:"required"`
 	ClienteRefer   int             `json:"cliente_refer"`
 	Cliente        Customer        `gorm:"foreignKey:ClienteRefer;"  json:"cliente"`
-	VendedorRefer  int             `json:"vendedor_referer"`
+	VendedorRefer  int             `json:"-"`
 	Vendedor       User            `gorm:"foreignKey:VendedorRefer;"  json:"vendedor"`
 	Arquivos       []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
 	Procedure      []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
