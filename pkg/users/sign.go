@@ -30,7 +30,7 @@ func (r *handler) Sign(app *fiber.Ctx) error {
 	err := r.Db.Where("username = ?", userq.Username).First(&user).Error
 
 	if err != nil {
-		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
+		err = app.Status(http.StatusUnauthorized).JSON(&fiber.Map{
 			"detail": "Usuario não encontrado!",
 			"error":  err.Error(),
 		})
@@ -40,7 +40,7 @@ func (r *handler) Sign(app *fiber.Ctx) error {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userq.Password))
 
 	if err != nil {
-		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
+		err = app.Status(http.StatusUnauthorized).JSON(&fiber.Map{
 			"detail": "Verifique sua Senha!",
 		})
 		return err

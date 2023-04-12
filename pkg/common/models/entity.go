@@ -60,7 +60,7 @@ type Customer struct {
 
 func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 	uuid := uuid.New()
-	if u.Prontuario == "" {
+	if len(u.Prontuario) == 0 {
 		u.Prontuario = uuid.String()
 	}
 
