@@ -9,7 +9,7 @@ import (
 
 func (r handler) GetAll(app *fiber.Ctx) error {
 	var budget []models.Budget
-	err := r.Db.Preload("Cliente").Preload("Vendedor").Preload("Arquivos").Preload("Procedure").Preload("ValorProposta").Find(&budget).Error
+	err := r.Db.Preload("Cliente").Preload("Cliente.Midia").Preload("Vendedor").Preload("Arquivos").Preload("Procedure").Preload("ValorProposta").Find(&budget).Error
 
 	if err != nil {
 		app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
