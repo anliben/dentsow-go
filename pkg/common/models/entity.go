@@ -14,9 +14,9 @@ import (
 type ProposedValue struct {
 	gorm.Model
 	Price    string `json:"price"`
-	Amount   int    `json:"amount"`
-	Addition int    `json:"addition"`
-	Discount int    `json:"discount"`
+	Amount   string `json:"amount"`
+	Addition string `json:"addition"`
+	Discount string `json:"discount"`
 	X        string `json:"x"`
 }
 
@@ -127,41 +127,44 @@ type Budget struct {
 }
 
 func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
-	var cliente Customer
-	db, _ := database.OpenConnection()
 
-	err = db.Find(&cliente, u.ClienteRefer).Error
+	if u.FormaPagamento == "BOLETO" {
+		var cliente Customer
+		db, _ := database.OpenConnection()
 
-	if err != nil {
-		fmt.Println(err)
+		err = db.Find(&cliente, u.ClienteRefer).Error
+
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTAxMTE6OiRhYWNoX2EzZGNmMDY1LWM0MWYtNDg4OC05ZjNlLTRmOGVlNTczMjQyMw==", api.AsaasModeProd)
+
+		resp, err := pay.PaymentCreate(&asaas.Payment{
+			BillingType:       asaas.BillingType("BOLETO"),
+			Value:             u.ValorTotal,
+			Description:       "Denshow - Orçamento",
+			Name:              u.Cliente.Nome,
+			DueDateLimitDays:  5,
+			DueDate:           u.Data,
+			ChargeType:        "DETACHED",
+			Customer:          u.Cliente.Assasid,
+			ExternalReference: u.Cliente.Prontuario,
+			NextDueDate:       u.Data,
+			SubscriptionCycle: api.SubscriptionCycle(1),
+		})
+
+		if err != nil {
+			return err
+		}
+
+		u.Paymentid = resp.Id
+		u.Situacao = "PENDING"
+		u.Data = resp.DateCreated
+		u.NetValue = resp.NetValue
+		u.Linkpagamento = resp.InvoiceUrl
+		u.BankSlipUrl = resp.BankSlipUrl
 	}
-
-	pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTAxMTE6OiRhYWNoX2EzZGNmMDY1LWM0MWYtNDg4OC05ZjNlLTRmOGVlNTczMjQyMw==", api.AsaasModeProd)
-
-	resp, err := pay.PaymentCreate(&asaas.Payment{
-		BillingType:       asaas.BillingType(u.FormaPagamento),
-		Value:             u.ValorTotal,
-		Description:       "Denshow - Orçamento",
-		Name:              u.Cliente.Nome,
-		DueDateLimitDays:  5,
-		DueDate:           u.Data,
-		ChargeType:        "DETACHED",
-		Customer:          u.Cliente.Assasid,
-		ExternalReference: u.Cliente.Prontuario,
-		NextDueDate:       u.Data,
-		SubscriptionCycle: api.SubscriptionCycle(1),
-	})
-
-	if err != nil {
-		return err
-	}
-
-	u.Paymentid = resp.Id
-	u.Situacao = "PENDING"
-	u.Data = resp.DateCreated
-	u.NetValue = resp.NetValue
-	u.Linkpagamento = resp.InvoiceUrl
-	u.BankSlipUrl = resp.BankSlipUrl
 
 	return err
 }
