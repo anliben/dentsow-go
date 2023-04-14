@@ -11,8 +11,10 @@ import (
 	"fiber/pkg/proposed"
 	"fiber/pkg/users"
 	"fiber/pkg/utils"
+
 	//"fiber/pkg/common/models"
-	"os"
+
+	_ "fiber/docs"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -20,9 +22,17 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-	
-
-func Setup() error {
+// @title Fiber Example API
+// @version 1.0
+// @description This is a sample swagger for Fiber
+// @termsOfService http://swagger.io/terms/
+// @contact.name API Support
+// @contact.email fiber@swagger.io
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @host localhost:8080
+// @BasePath /
+func Setup() {
 	app := fiber.New(fiber.Config{
 		JSONEncoder: json.Marshal,
 		JSONDecoder: json.Unmarshal,
@@ -41,15 +51,15 @@ func Setup() error {
 	}))
 
 	db, _ := database.OpenConnection()
-	
-	//db.AutoMigrate(&models.User{})
-	//db.AutoMigrate(&models.Budget{})
-	//db.AutoMigrate(&models.Customer{})
-	//db.AutoMigrate(&models.Data{})
-	//db.AutoMigrate(&models.Files{})
-	//db.AutoMigrate(&models.Groups{})
-	//db.AutoMigrate(&models.Procedure{})
-	//db.AutoMigrate(&models.ProposedValue{})
+
+	// db.AutoMigrate(&models.User{})
+	// db.AutoMigrate(&models.Budget{})
+	// db.AutoMigrate(&models.Customer{})
+	// db.AutoMigrate(&models.Data{})
+	// db.AutoMigrate(&models.Files{})
+	// db.AutoMigrate(&models.Groups{})
+	// db.AutoMigrate(&models.Procedure{})
+	// db.AutoMigrate(&models.ProposedValue{})
 
 	users.RegisterRoutes(app, db)
 	customer.RegisterRoutes(app, db)
@@ -60,17 +70,6 @@ func Setup() error {
 	utils.RegisterRoutes(app, db)
 	budget.RegisterRoutes(app, db)
 
-	err := app.Listen(getPort())
-	return err
-}
+	utils.StartServerWithGracefulShutdown(app)
 
-func getPort() string {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = ":3000"
-	} else {
-		port = ":" + port
-	}
-
-	return port
 }
