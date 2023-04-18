@@ -10,7 +10,7 @@ import (
 
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
-var SwaggerInfo = &swag.Spec{
+var SwaggerInfo = &swag.Spec {
 	Version:          "2.0",
 	Host:             "",
 	BasePath:         "/api/v1",
@@ -24,7 +24,6 @@ var SwaggerInfo = &swag.Spec{
 func init() {
 	swag.Register(SwaggerInfo.InstanceName(), SwaggerInfo)
 }
-
 
 func SwaggerJSON() string {
     file, err := ioutil.ReadFile("./docs/swagger.yaml")
