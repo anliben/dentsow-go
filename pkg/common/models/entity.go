@@ -166,7 +166,10 @@ func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
 		u.BankSlipUrl = resp.BankSlipUrl
 	}
 
-	return err
+	u.Situacao = "PENDING"
+	u.NetValue = u.ValorTotal
+
+	return nil
 }
 
 type User struct {

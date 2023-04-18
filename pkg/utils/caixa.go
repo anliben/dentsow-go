@@ -76,11 +76,6 @@ func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
 	for index, item := range orcamento {
 		p, _ := pay.PaymentGet(item.Paymentid)
 
-		// if err != nil {
-		// listPayNotFound = append(listPayNotFound, PaymentNotFound{IDPaymentNotFound: item.Paymentid})
-		// return nil
-		// }
-
 		for index, item := range item.Procedure {
 			fmt.Println(index, item)
 		}
