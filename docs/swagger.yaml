@@ -1,0 +1,24 @@
+info:
+  contact: {}
+paths:
+  /users:
+    post:
+      consumes:
+        - application/json
+      parameters:
+        - description: Coloque seu Username
+          in: body
+          name: username
+          required: true
+          schema:
+            type: string
+
+        - description: Coloque sua Password
+          in: body
+          name: password
+          required: true
+          schema:
+            type: string
+
+
+swagger: "2.0"

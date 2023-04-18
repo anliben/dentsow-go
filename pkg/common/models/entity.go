@@ -111,7 +111,7 @@ type Budget struct {
 	Situacao       string          `json:"situacao"`
 	Anotacoes      string          `json:"anotacoes"`
 	FormaPagamento string          `json:"forma_pagamento" validate:"required"`
-	ClienteRefer   int             `json:"cliente_refer"`
+	ClienteRefer   int             `json:"-"`
 	Cliente        Customer        `gorm:"foreignKey:ClienteRefer;"  json:"cliente"`
 	VendedorRefer  int             `json:"-"`
 	Vendedor       User            `gorm:"foreignKey:VendedorRefer;"  json:"vendedor"`

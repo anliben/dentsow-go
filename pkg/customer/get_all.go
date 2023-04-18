@@ -8,9 +8,17 @@ import (
 	"gorm.io/gorm"
 )
 
+// @title Fiber Swagger Example API
+// @Summary Show the status of server.
+// @Description get the status of server.
+// @Tags root
+// @Accept */*
+// @Produce json
+// @Success 200 {object} []models.Customer
+// @Router / [get]
 func (r handler) GetAll(app *fiber.Ctx) error {
 	var customer []models.Customer
-	
+
 	tx := r.Db.Session(&gorm.Session{PrepareStmt: true})
 
 	err := tx.
