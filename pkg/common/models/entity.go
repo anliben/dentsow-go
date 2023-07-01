@@ -31,14 +31,14 @@ type Customer struct {
 	Nome                string  `json:"nome"`
 	DataNascimento      string  `json:"data_nascimento"`
 	Cpf                 string  `json:"cpf" gorm:"unique; not null;" validate:"required"`
-	Rg                  string  `json:"rg" gorm:"unique; not null;" validate:"required"`
+	Rg                  string  `json:"rg" gorm:"unique; not null;"`
 	Email               string  `json:"email" gorm:"unique" validate:"email,omitempty,required" structs:"email,omitempty"`
 	Idade               int     `json:"idade" validate:"required"`
 	Foto                string  `json:"foto"`
 	EstadoCivil         string  `json:"estado_civil"`
 	Sexo                string  `json:"sexo"`
-	Celular             string  `json:"celular"`
-	Telefone            string  `json:"telefone"`
+	Contato             string  `json:"contato"`
+	Contato2            string  `json:"contato2"`
 	Cep                 string  `json:"cep" validate:"required"`
 	Logradouro          string  `json:"logradouro"`
 	Numero              string  `json:"numero"`
@@ -56,6 +56,8 @@ type Customer struct {
 	ConsultasRealizadas int     `json:"consultas_realizadas"`
 	ConsultasRestantes  int     `json:"consultas_restantes"`
 	Midia               []Files `gorm:"many2many:customer_midias;"  json:"midias"`
+	NomeResponsavel     string  `json:"nome_responsavel"`
+	CpfResponsavel      string  `json:"cpf_responsavel"`
 }
 
 func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
@@ -65,13 +67,25 @@ func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
 		u.Prontuario = uuid.String()
 	}
 
+	if u.Idade < 18 {
+		if u.NomeResponsavel != "" {
+			fmt.Println(err)
+		}
+	}
+
+	if u.Idade < 18 {
+		if u.CpfResponsavel != "" {
+			fmt.Println(err)
+		}
+	}
+
 	pay := asaas.NewAsaas("BRL", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTg3Njc6OiRhYWNoXzQxZWVkN2E3LWRkMDgtNGY3Ni1iZGFlLTczYjQzZjVkMmQ2ZA==", api.AsaasModeProd)
 
 	resp, err := pay.CustomerCreate(&asaas.Customer{
 		Name:                 u.Nome,
 		CpfCnpj:              u.Cpf,
 		Email:                u.Email,
-		Phone:                u.Celular,
+		Phone:                u.Contato,
 		NotificationDisabled: false,
 		ExternalReference:    u.Prontuario,
 	})
