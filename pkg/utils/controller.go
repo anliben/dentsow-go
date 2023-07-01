@@ -33,7 +33,7 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	routes.Get("/migrate", r.Migrate, timeout.New(h, 10*time.Second))
 	routes.Get("/metrics", monitor.New(monitor.Config{Title: "MyService Metrics Page"}))
 	routes.Get("/:table", r.GetCountIdTable)
-	routes.Get("/:mes/:ano", r.GetCaixaEnd, timeout.New(h, 10*time.Second))
+	routes.Get("/:mes/:ano", r.GetCaixaEnd, timeout.NewWithContext(h, 10*time.Second))
 }
 
 func sleepWithContext(ctx context.Context, d time.Duration) error {
