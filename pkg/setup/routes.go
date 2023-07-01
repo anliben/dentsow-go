@@ -59,15 +59,6 @@ func Setup() {
 
 	db, _ := database.OpenConnection()
 
-	// db.AutoMigrate(&models.User{})
-	// db.AutoMigrate(&models.Budget{})
-	// db.AutoMigrate(&models.Customer{})
-	// db.AutoMigrate(&models.Data{})
-	// db.AutoMigrate(&models.Files{})
-	// db.AutoMigrate(&models.Groups{})
-	// db.AutoMigrate(&models.Procedure{})
-	// db.AutoMigrate(&models.ProposedValue{})
-
 	users.RegisterRoutes(app, db)
 	customer.RegisterRoutes(app, db)
 	groups.RegisterRoutes(app, db)

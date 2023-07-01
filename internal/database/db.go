@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fiber/pkg/common/models"
 	"fmt"
 
 	_ "github.com/lib/pq"
@@ -26,5 +27,20 @@ func OpenConnection() (*gorm.DB, error) {
 		return nil, err
 	}
 
+	// AutoMigrate(db)
+
 	return db, err
+}
+
+func AutoMigrate(ctx *gorm.DB) {
+	ctx.Debug().AutoMigrate(
+		&models.User{},
+		&models.Budget{},
+		&models.Customer{},
+		&models.Data{},
+		&models.Files{},
+		&models.Groups{},
+		&models.Procedure{},
+		&models.ProposedValue{},
+	)
 }

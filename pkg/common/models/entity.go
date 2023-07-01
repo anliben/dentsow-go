@@ -2,7 +2,6 @@ package models
 
 import (
 	"fiber/internal/configs"
-	"fiber/internal/database"
 	"fmt"
 	"time"
 
@@ -138,11 +137,10 @@ type Budget struct {
 	NetValue       float64         `json:"valor_liquido"`
 }
 
-func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
+func (u *Budget) BeforeCreate(db *gorm.DB) (err error) {
 
 	if u.FormaPagamento == "BOLETO" {
 		var cliente Customer
-		db, _ := database.OpenConnection()
 
 		err = db.Find(&cliente, u.ClienteRefer).Error
 
