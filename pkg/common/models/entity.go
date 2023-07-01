@@ -31,7 +31,7 @@ type Customer struct {
 	Nome                string  `json:"nome"`
 	DataNascimento      string  `json:"data_nascimento"`
 	Cpf                 string  `json:"cpf" gorm:"unique; not null;" validate:"required"`
-	Rg                  string  `json:"rg" gorm:"unique; not null;"`
+	Rg                  string  `json:"rg"`
 	Email               string  `json:"email" gorm:"unique" validate:"email,omitempty,required" structs:"email,omitempty"`
 	Idade               int     `json:"idade" validate:"required"`
 	Foto                string  `json:"foto"`
@@ -49,7 +49,7 @@ type Customer struct {
 	Prontuario          string  `json:"prontuario"`
 	Assasid             string  `json:"assas_id"`
 	Situacao            string  `json:"situacao"`
-	Indicacao             string  `json:"indicacao"`
+	Indicacao           string  `json:"indicacao"`
 	Profissao           string  `json:"profissao"`
 	Observacao          string  `json:"observacao"`
 	ConsultasCreditos   int     `json:"consultas_creditos"`
