@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fiber/internal/configs"
 	"fiber/internal/database"
 	"fmt"
 	"time"
@@ -75,7 +76,8 @@ func (u *Customer) BeforeCreate(db *gorm.DB) (err error) {
 		u.Prontuario = prontuario
 	}
 
-	pay := asaas.NewAsaas("BRL", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTg3Njc6OiRhYWNoXzQxZWVkN2E3LWRkMDgtNGY3Ni1iZGFlLTczYjQzZjVkMmQ2ZA==", api.AsaasModeProd)
+	token := configs.GetAsaasToken()
+	pay := asaas.NewAsaas("BRL", token.AsaasToken, token.AsaasMode)
 
 	resp, err := pay.CustomerCreate(&asaas.Customer{
 		Name:                 u.Nome,
@@ -148,7 +150,8 @@ func (u *Budget) BeforeCreate(tx *gorm.DB) (err error) {
 			fmt.Println(err)
 		}
 
-		pay := asaas.NewAsaas("", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTg3Njc6OiRhYWNoXzQxZWVkN2E3LWRkMDgtNGY3Ni1iZGFlLTczYjQzZjVkMmQ2ZA==", api.AsaasModeProd)
+		token := configs.GetAsaasToken()
+		pay := asaas.NewAsaas("BRL", token.AsaasToken, token.AsaasMode)
 
 		resp, err := pay.PaymentCreate(&asaas.Payment{
 			BillingType:       asaas.BillingType("BOLETO"),

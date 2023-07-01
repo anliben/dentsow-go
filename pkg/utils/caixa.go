@@ -1,13 +1,13 @@
 package utils
 
 import (
+	"fiber/internal/configs"
 	"fiber/pkg/common/models"
 	"net/http"
 
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
 )
 
@@ -79,7 +79,8 @@ func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
 	listCaixa := []Caixa{}
 	listPayNotFound := []PaymentNotFound{}
 
-	pay := asaas.NewAsaas("BRL", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTg3Njc6OiRhYWNoXzQxZWVkN2E3LWRkMDgtNGY3Ni1iZGFlLTczYjQzZjVkMmQ2ZA==", api.AsaasModeProd)
+	token := configs.GetAsaasToken()
+	pay := asaas.NewAsaas("BRL", token.AsaasToken, token.AsaasMode)
 
 	for index, item := range orcamento {
 		if item.FormaPagamento != "BOLETO" {
