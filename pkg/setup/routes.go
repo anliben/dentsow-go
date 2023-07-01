@@ -11,6 +11,8 @@ import (
 	"fiber/pkg/proposed"
 	"fiber/pkg/users"
 	"fiber/pkg/utils"
+	"fmt"
+	"time"
 
 	//"fiber/pkg/common/models"
 
@@ -70,6 +72,15 @@ func Setup() {
 
 	app.Get("/swagger/*", fiberSwagger.WrapHandler) // default
 
+	// go Hello()
+
 	utils.StartServerWithGracefulShutdown(app)
 
+}
+
+func Hello() {
+	for index := 0; index < 10000; index++ {
+		fmt.Println("Estou ainda rodando em segundo plano")
+		time.Sleep(time.Millisecond * 250)
+	}
 }

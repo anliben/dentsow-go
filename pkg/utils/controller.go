@@ -30,7 +30,8 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 
 	routes := app.Group("/api/v1/utils")
 	app.Static("/", "./public")
-	routes.Get("/migrate", r.Migrate, timeout.New(h, 10*time.Second))
+	routes.Get("/migrate", r.Migrate, timeout.NewWithContext(h, 10*time.Second))
+	routes.Get("/customers", r.GetCustomerList)
 	routes.Get("/metrics", monitor.New(monitor.Config{Title: "MyService Metrics Page"}))
 	routes.Get("/:table", r.GetCountIdTable)
 	routes.Get("/:mes/:ano", r.GetCaixaEnd, timeout.NewWithContext(h, 10*time.Second))

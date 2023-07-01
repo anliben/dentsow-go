@@ -162,7 +162,7 @@ func (u *Budget) BeforeCreate(db *gorm.DB) (err error) {
 			Customer:          u.Cliente.Assasid,
 			ExternalReference: u.Cliente.Prontuario,
 			NextDueDate:       u.Data,
-			SubscriptionCycle: api.SubscriptionCycle(1),
+			SubscriptionCycle: api.SubscriptionCycle("1"),
 		})
 
 		if err != nil {
