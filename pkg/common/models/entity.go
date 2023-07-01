@@ -3,9 +3,9 @@ package models
 import (
 	"fiber/internal/database"
 	"fmt"
+	"time"
 
 	"github.com/go-playground/validator"
-	"github.com/google/uuid"
 	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
 	"gorm.io/gorm"
@@ -30,16 +30,16 @@ type Customer struct {
 	gorm.Model
 	Nome                string  `json:"nome"`
 	DataNascimento      string  `json:"data_nascimento"`
-	Cpf                 string  `json:"cpf" gorm:"unique; not null;" validate:"required"`
+	Cpf                 string  `json:"cpf" gorm:"unique;"`
 	Rg                  string  `json:"rg"`
-	Email               string  `json:"email" gorm:"unique" validate:"email,omitempty,required" structs:"email,omitempty"`
-	Idade               int     `json:"idade" validate:"required"`
+	Email               string  `json:"email" gorm:"unique" validate:"email" structs:"email"`
+	Idade               int     `json:"idade"`
 	Foto                string  `json:"foto"`
 	EstadoCivil         string  `json:"estado_civil"`
 	Sexo                string  `json:"sexo"`
 	Contato             string  `json:"contato"`
 	Contato2            string  `json:"contato2"`
-	Cep                 string  `json:"cep" validate:"required"`
+	Cep                 string  `json:"cep"`
 	Logradouro          string  `json:"logradouro"`
 	Numero              string  `json:"numero"`
 	Complemento         string  `json:"complemento"`
@@ -60,23 +60,19 @@ type Customer struct {
 	CpfResponsavel      string  `json:"cpf_responsavel"`
 }
 
-func (u *Customer) BeforeCreate(tx *gorm.DB) (err error) {
-	uuid := uuid.New()
+func (u *Customer) BeforeCreate(db *gorm.DB) (err error) {
+
+	var last_id int
+
+	err = db.Raw("SELECT MAX(id)+1 AS id FROM Customers").Scan(&last_id).Error
+	if err != nil {
+		return err
+	}
 
 	if len(u.Prontuario) == 0 {
-		u.Prontuario = uuid.String()
-	}
-
-	if u.Idade < 18 {
-		if u.NomeResponsavel != "" {
-			fmt.Println(err)
-		}
-	}
-
-	if u.Idade < 18 {
-		if u.CpfResponsavel != "" {
-			fmt.Println(err)
-		}
+		ano, mes, _ := time.Now().Date()
+		prontuario := fmt.Sprintf("%d%d%d", ano, int32(mes), last_id)
+		u.Prontuario = prontuario
 	}
 
 	pay := asaas.NewAsaas("BRL", "$aact_YTU5YTE0M2M2N2I4MTliNzk0YTI5N2U5MzdjNWZmNDQ6OjAwMDAwMDAwMDAwMDAyOTg3Njc6OiRhYWNoXzQxZWVkN2E3LWRkMDgtNGY3Ni1iZGFlLTczYjQzZjVkMmQ2ZA==", api.AsaasModeProd)
