@@ -50,7 +50,7 @@ func Setup() {
 	app.Use(recover.New())
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:4553,https://dentshow.up.railway.app",
+		AllowOrigins:     "http://localhost:4553,https://dentshow-ui.vercel.app",
 		AllowHeaders:     "",
 		AllowCredentials: true,
 	}))
