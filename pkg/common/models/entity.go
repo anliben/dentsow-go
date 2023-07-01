@@ -49,7 +49,7 @@ type Customer struct {
 	Prontuario          string  `json:"prontuario"`
 	Assasid             string  `json:"assas_id"`
 	Situacao            string  `json:"situacao"`
-	Indicao             string  `json:"indicao"`
+	Indicacao             string  `json:"indicacao"`
 	Profissao           string  `json:"profissao"`
 	Observacao          string  `json:"observacao"`
 	ConsultasCreditos   int     `json:"consultas_creditos"`

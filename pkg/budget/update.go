@@ -56,7 +56,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 		Prontuario:          foo.Cliente.Prontuario,
 		Assasid:             foo.Cliente.Assasid,
 		Situacao:            foo.Cliente.Situacao,
-		Indicao:             foo.Cliente.Indicao,
+		Indicacao:             foo.Cliente.Indicacao,
 		Profissao:           foo.Cliente.Profissao,
 		Observacao:          foo.Cliente.Observacao,
 		ConsultasCreditos:   foo.Cliente.ConsultasCreditos,
