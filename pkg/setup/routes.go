@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fiber/internal/database"
 	"fiber/pkg/budget"
-	"fiber/pkg/common/models"
 	"fiber/pkg/customer"
 	"fiber/pkg/files"
 	"fiber/pkg/groups"
@@ -60,14 +59,14 @@ func Setup() {
 
 	db, _ := database.OpenConnection()
 
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.Budget{})
-	db.AutoMigrate(&models.Customer{})
-	db.AutoMigrate(&models.Data{})
-	db.AutoMigrate(&models.Files{})
-	db.AutoMigrate(&models.Groups{})
-	db.AutoMigrate(&models.Procedure{})
-	db.AutoMigrate(&models.ProposedValue{})
+	// db.AutoMigrate(&models.User{})
+	// db.AutoMigrate(&models.Budget{})
+	// db.AutoMigrate(&models.Customer{})
+	// db.AutoMigrate(&models.Data{})
+	// db.AutoMigrate(&models.Files{})
+	// db.AutoMigrate(&models.Groups{})
+	// db.AutoMigrate(&models.Procedure{})
+	// db.AutoMigrate(&models.ProposedValue{})
 
 	users.RegisterRoutes(app, db)
 	customer.RegisterRoutes(app, db)

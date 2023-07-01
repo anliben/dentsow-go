@@ -17,4 +17,5 @@ func RegisterRoutes(app *fiber.App, db *gorm.DB) {
 	routes := app.Group("/api/v1/files")
 	routes.Post("/", r.Upload)
 	routes.Get("/", r.GetAll)
+	routes.Delete("/:uuid", r.Delete)
 }
