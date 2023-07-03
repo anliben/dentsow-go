@@ -29,7 +29,6 @@ func (r handler) Upload(app *fiber.Ctx) error {
 				})
 				return err
 			}
-			
 
 			erro := r.Db.Create(&models.Files{
 				Url:      app.BaseURL() + "/" + new_file_name_uuid,

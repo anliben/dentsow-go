@@ -82,7 +82,13 @@ func (u *Customer) BeforeCreate(db *gorm.DB) (err error) {
 		Name:                 u.Nome,
 		CpfCnpj:              u.Cpf,
 		Email:                u.Email,
-		Phone:                u.Contato,
+		Phone:                u.Contato2,
+		MobilePhone:          u.Contato,
+		Address:              u.Logradouro,
+		AddressNumber:        u.Numero,
+		Province:             u.Bairro,
+		PostalCode:           u.Cep,
+		City:                 u.Cidade,
 		NotificationDisabled: false,
 		ExternalReference:    u.Prontuario,
 	})
@@ -117,27 +123,29 @@ type Data struct {
 
 type Budget struct {
 	gorm.Model
-	DataRefer      int             `json:"data_refer"`
-	Data           string          `json:"data" validate:"required"`
-	Situacao       string          `json:"situacao"`
-	Anotacoes      string          `json:"anotacoes"`
-	FormaPagamento string          `json:"forma_pagamento" validate:"required"`
-	ClienteRefer   int             `json:"-"`
-	Cliente        Customer        `gorm:"foreignKey:ClienteRefer;"  json:"cliente"`
-	VendedorRefer  int             `json:"-"`
-	Vendedor       User            `gorm:"foreignKey:VendedorRefer;"  json:"vendedor"`
-	Arquivos       []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
-	Procedure      []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
-	ValorProposta  []ProposedValue `gorm:"many2many:budget_propostas;" json:"valores_proposta"`
-	Paymentid      string          `json:"paymentid"`
-	ValorTotal     float64         `json:"valor_total" validate:"required"`
-	Linkpagamento  string          `json:"link_pagamento"`
-	InvoiceUrl     string          `json:"link_nota"`
-	BankSlipUrl    string          `json:"link_boleto"`
-	NetValue       float64         `json:"valor_liquido"`
+	Data               string          `json:"data" validate:"required"`
+	Situacao           string          `json:"situacao"`
+	Anotacoes          string          `json:"anotacoes"`
+	FormaPagamento     string          `json:"forma_pagamento" validate:"required"`
+	ClienteRefer       int             `json:"-"`
+	Cliente            Customer        `gorm:"foreignKey:ClienteRefer;"  json:"cliente"`
+	VendedorRefer      int             `json:"-"`
+	Vendedor           User            `gorm:"foreignKey:VendedorRefer;"  json:"vendedor"`
+	Arquivos           []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
+	Procedure          []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
+	ValorProposta      []ProposedValue `gorm:"many2many:budget_propostas;" json:"valores_proposta"`
+	Paymentid          string          `json:"paymentid"`
+	ValorTotal         float64         `json:"valor_total" validate:"required"`
+	Linkpagamento      string          `json:"link_pagamento"`
+	InvoiceUrl         string          `json:"link_nota"`
+	BankSlipUrl        string          `json:"link_boleto"`
+	NetValue           float64         `json:"valor_liquido"`
+	Quantidadeparcelas int             `json:"quantidade_parcelas"`
+	ValorParcelas      int64           `json:"valor_parcelas"`
 }
 
 func (u *Budget) BeforeCreate(db *gorm.DB) (err error) {
+	var payment *asaas.Payment
 
 	if u.FormaPagamento == "BOLETO" {
 		var cliente Customer
@@ -151,19 +159,34 @@ func (u *Budget) BeforeCreate(db *gorm.DB) (err error) {
 		token := configs.GetAsaasToken()
 		pay := asaas.NewAsaas("BRL", token.AsaasToken, token.AsaasMode)
 
-		resp, err := pay.PaymentCreate(&asaas.Payment{
+		// ChargeType := asaas.Detached
+		// if u.Quantidadeparcelas > 1 {
+		// 	ChargeType = asaas.Installment
+		// 	payment.InstallmentCount = int64(u.Quantidadeparcelas)
+		// 	payment.InstallmentValue = u.ValorParcelas
+		// 	payment.TotalValue = u.ValorTotal
+		// } else {
+		// 	payment.Value = u.ValorTotal
+		// }
+
+		payment = &asaas.Payment{
 			BillingType:       asaas.BillingType("BOLETO"),
-			Value:             u.ValorTotal,
+			DueDate:           u.Data,
 			Description:       "Denshow - Orçamento",
+			ExternalReference: u.Cliente.Prontuario,
+			PostalService:     false,
 			Name:              u.Cliente.Nome,
 			DueDateLimitDays:  5,
-			DueDate:           u.Data,
-			ChargeType:        "DETACHED",
-			Customer:          u.Cliente.Assasid,
-			ExternalReference: u.Cliente.Prontuario,
-			NextDueDate:       u.Data,
-			SubscriptionCycle: api.SubscriptionCycle("1"),
-		})
+			// ChargeType:        ChargeType,
+			Customer:            u.Cliente.Assasid,
+			NextDueDate:         u.Data,
+			SubscriptionCycle:   api.SubscriptionCycle("1"),
+			MaxInstallmentCount: int64(u.Quantidadeparcelas),
+		}
+
+		resp, err := pay.PaymentCreate(payment)
+
+		fmt.Println(resp, err)
 
 		if err != nil {
 			return err

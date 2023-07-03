@@ -30,7 +30,7 @@ func (r handler) GetAll(app *fiber.Ctx) error {
 	db.Where(utils.Builder("situacao LIKE ?", "%"+situacao+"%"))
 	db.Where(utils.Builder("anotacoes LIKE ?", "%"+anotacoes+"%"))
 	db.Where(utils.Builder("forma_pagamento LIKE ?", "%"+forma_pagamento+"%"))
-	db.Where(utils.Builder("valor_total LIKE ?", "%"+valor_total+"%"))
+	db.Where(utils.Builder("valor_total = ?", valor_total))
 
 	err := db.Find(&budget).Error
 
