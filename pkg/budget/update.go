@@ -56,7 +56,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 		Prontuario:          foo.Cliente.Prontuario,
 		Assasid:             foo.Cliente.Assasid,
 		Situacao:            foo.Cliente.Situacao,
-		Indicacao:             foo.Cliente.Indicacao,
+		Indicacao:           foo.Cliente.Indicacao,
 		Profissao:           foo.Cliente.Profissao,
 		Observacao:          foo.Cliente.Observacao,
 		ConsultasCreditos:   foo.Cliente.ConsultasCreditos,
@@ -76,7 +76,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 	}
 
 	r.Db.Model(&orcamento).Association("Arquivos").Replace(foo.Arquivos)
-	r.Db.Model(&orcamento).Association("Procedure").Replace(foo.Procedure)
+	r.Db.Model(&orcamento).Association("Tooth").Replace(foo.Tooth)
 	r.Db.Model(&orcamento).Association("ValorProposta").Replace(foo.ValorProposta)
 
 	err = r.Db.Where("id = ?", id).First(&orcamento).Error

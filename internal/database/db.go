@@ -12,11 +12,11 @@ import (
 func OpenConnection() (*gorm.DB, error) {
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=America/Sao_Paulo",
-		"containers-us-west-12.railway.app",
+		"containers-us-west-180.railway.app",
 		"postgres",
-		"CIysnzTzYNGCBhXGNuiU",
+		"PfN7gHn5ZfLCFsUlMnGv",
 		"railway",
-		"6497")
+		"6051")
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		SkipDefaultTransaction: true,
@@ -42,5 +42,6 @@ func AutoMigrate(ctx *gorm.DB) {
 		&models.Groups{},
 		&models.Procedure{},
 		&models.ProposedValue{},
+		&models.Tooth{},
 	)
 }

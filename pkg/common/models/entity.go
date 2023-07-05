@@ -121,6 +121,13 @@ type Data struct {
 	Ano int `json:"ano" validate:"required"`
 }
 
+type Tooth struct {
+	gorm.Model
+	Nome      string      `json:"nome"`
+	Numero    string      `json:"numero"`
+	Procedure []Procedure `gorm:"many2many:thooth_procedimentos;" json:"procedimentos"`
+}
+
 type Budget struct {
 	gorm.Model
 	Data               string          `json:"data" validate:"required"`
@@ -132,7 +139,7 @@ type Budget struct {
 	VendedorRefer      int             `json:"-"`
 	Vendedor           User            `gorm:"foreignKey:VendedorRefer;"  json:"vendedor"`
 	Arquivos           []Files         `gorm:"many2many:budget_arquivos;" json:"arquivos"`
-	Procedure          []Procedure     `gorm:"many2many:budget_orcamentos;" json:"procedimentos"`
+	Tooth              []Tooth         `gorm:"many2many:budget_tooths;" json:"dentes_procedimento"`
 	ValorProposta      []ProposedValue `gorm:"many2many:budget_propostas;" json:"valores_proposta"`
 	Paymentid          string          `json:"paymentid"`
 	ValorTotal         float64         `json:"valor_total" validate:"required"`
