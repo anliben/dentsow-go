@@ -23,7 +23,8 @@ func (r handler) GetAll(app *fiber.Ctx) error {
 		Preload("Vendedor").
 		Preload("Vendedor.Groups").
 		Preload("Arquivos").
-		Preload("Procedure").
+		Preload("Tooth").
+		Preload("Tooth.Procedure").
 		Preload("ValorProposta")
 
 	db.Where(utils.Builder("data LIKE ?", "%"+data+"%"))
