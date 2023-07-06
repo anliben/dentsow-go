@@ -61,15 +61,14 @@ type Customer struct {
 }
 
 func (u *Customer) BeforeCreate(db *gorm.DB) (err error) {
-
 	var last_id int
 
-	err = db.Raw("SELECT MAX(id)+1 AS id FROM Customers").Scan(&last_id).Error
-	if err != nil {
-		return err
-	}
-
 	if len(u.Prontuario) == 0 {
+		err = db.Raw("SELECT MAX(id)+1 AS id FROM Customers").Scan(&last_id).Error
+		if err != nil {
+			return err
+		}
+
 		ano, mes, _ := time.Now().Date()
 		prontuario := fmt.Sprintf("%d%d%d", ano, int32(mes), last_id)
 		u.Prontuario = prontuario
