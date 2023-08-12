@@ -7,6 +7,15 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Create Cria um novo Budget.
+//	@Description	Cria um novo Budget
+//	@Summary		Cria um novo Budget
+//	@Tags			Budget
+//	@Accept			json
+//	@Produce		json
+//	@Param			budget body models.Budget true "Budget"
+//	@Success		200	{object} models.Budget
+//	@Router			/api/v1/orcamentos [post]
 func (r handler) Create(app *fiber.Ctx) error {
 	var orcamento models.Budget
 
@@ -33,9 +42,6 @@ func (r handler) Create(app *fiber.Ctx) error {
 		return err
 	}
 
-	app.JSON(&fiber.Map{
-		"message": "Orcamento created successfully",
-		"item":    orcamento,
-	})
+	app.JSON(orcamento)
 	return nil
 }

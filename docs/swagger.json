@@ -1,51 +1,535 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "This is an auto-generated API Docs.",
-        "title": "API",
-        "termsOfService": "http://swagger.io/terms/",
-        "contact": {
-            "name": "API Support",
-            "email": "your@mail.com"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
-        "version": "1.0"
+        "contact": {}
     },
-    "basePath": "/api/v1",
     "paths": {
-        "/jwt/create": {
-            "post": {
-                "description": "Create JWT Token",
-                "tags": "Sign In",
+        "/api/v1/clientes": {
+            "get": {
+                "description": "Pega Clientes.",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
                     "application/json"
                 ],
-                "parameters": [
-                    {
-                        "name": "email",
-                        "in": "formData",
-                        "description": "Email",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "password",
-                        "in": "formData",
-                        "description": "Password",
-                        "required": true,
-                        "type": "string"
-                    }
+                "tags": [
+                    "Clientes"
                 ],
-                "responsese": {
+                "summary": "Pega Clientes.",
+                "responses": {
                     "200": {
-                        "description": "successful operation",
+                        "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.User"
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.Customer"
+                                }
+                            }
                         }
                     }
+                }
+            }
+        },
+        "/api/v1/clientes/asaas": {
+            "get": {
+                "description": "Pega Clientes Asaas.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Pega Clientes Asaas.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/models.Customer"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/orcamentos": {
+            "post": {
+                "description": "Cria um novo Budget",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Budget"
+                ],
+                "summary": "Cria um novo Budget",
+                "parameters": [
+                    {
+                        "description": "Budget",
+                        "name": "budget",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Budget"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Budget"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/utils/{mes}/{ano}": {
+            "get": {
+                "description": "Pega Caixa.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Caixa"
+                ],
+                "summary": "Pega Caixa.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Mes",
+                        "name": "mes",
+                        "in": "path"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Ano",
+                        "name": "ano",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "object"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "models.Budget": {
+            "type": "object",
+            "required": [
+                "data",
+                "forma_pagamento",
+                "valor_total"
+            ],
+            "properties": {
+                "anotacoes": {
+                    "type": "string"
+                },
+                "arquivos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Files"
+                    }
+                },
+                "cliente": {
+                    "$ref": "#/definitions/models.Customer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "dentes_procedimento": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Tooth"
+                    }
+                },
+                "forma_pagamento": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "link_boleto": {
+                    "type": "string"
+                },
+                "link_nota": {
+                    "type": "string"
+                },
+                "link_pagamento": {
+                    "type": "string"
+                },
+                "paymentid": {
+                    "type": "string"
+                },
+                "quantidade_parcelas": {
+                    "type": "integer"
+                },
+                "situacao": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "valor_liquido": {
+                    "type": "number"
+                },
+                "valor_parcelas": {
+                    "type": "integer"
+                },
+                "valor_total": {
+                    "type": "number"
+                },
+                "valores_proposta": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProposedValue"
+                    }
+                },
+                "vendedor": {
+                    "$ref": "#/definitions/models.User"
+                }
+            }
+        },
+        "models.Customer": {
+            "type": "object",
+            "properties": {
+                "assas_id": {
+                    "type": "string"
+                },
+                "bairro": {
+                    "type": "string"
+                },
+                "cep": {
+                    "type": "string"
+                },
+                "cidade": {
+                    "type": "string"
+                },
+                "complemento": {
+                    "type": "string"
+                },
+                "consultas_creditos": {
+                    "type": "integer"
+                },
+                "consultas_realizadas": {
+                    "type": "integer"
+                },
+                "consultas_restantes": {
+                    "type": "integer"
+                },
+                "contato": {
+                    "type": "string"
+                },
+                "contato2": {
+                    "type": "string"
+                },
+                "cpf": {
+                    "type": "string"
+                },
+                "cpf_responsavel": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "data_nascimento": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "estado": {
+                    "type": "string"
+                },
+                "estado_civil": {
+                    "type": "string"
+                },
+                "foto": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "idade": {
+                    "type": "integer"
+                },
+                "indicacao": {
+                    "type": "string"
+                },
+                "logradouro": {
+                    "type": "string"
+                },
+                "midias": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Files"
+                    }
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "nome_responsavel": {
+                    "type": "string"
+                },
+                "numero": {
+                    "type": "string"
+                },
+                "observacao": {
+                    "type": "string"
+                },
+                "profissao": {
+                    "type": "string"
+                },
+                "prontuario": {
+                    "type": "string"
+                },
+                "rg": {
+                    "type": "string"
+                },
+                "sexo": {
+                    "type": "string"
+                },
+                "situacao": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Files": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Groups": {
+            "type": "object",
+            "required": [
+                "nome"
+            ],
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Procedure": {
+            "type": "object",
+            "required": [
+                "categoria",
+                "nome",
+                "preco"
+            ],
+            "properties": {
+                "categoria": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "preco": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProposedValue": {
+            "type": "object",
+            "properties": {
+                "addition": {
+                    "type": "string"
+                },
+                "amount": {
+                    "type": "string"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "discount": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "x": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Tooth": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "nome": {
+                    "type": "string"
+                },
+                "numero": {
+                    "type": "string"
+                },
+                "procedimentos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Procedure"
+                    }
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
+            "type": "object",
+            "required": [
+                "email",
+                "first_name",
+                "is_staff",
+                "last_name",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "grupos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Groups"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "is_active": {
+                    "type": "boolean"
+                },
+                "is_staff": {
+                    "type": "boolean"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
                 }
             }
         }

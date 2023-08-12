@@ -9,14 +9,14 @@ import (
 	"gorm.io/gorm"
 )
 
-// @title Fiber Swagger Example API
-// @Summary Show the status of server.
-// @Description get the status of server.
-// @Tags root
-// @Accept */*
-// @Produce json
-// @Success 200 {object} []models.Customer
-// @Router / [get]
+// GetAll Pega Clientes.
+//	@Description	Pega Clientes.
+//	@Summary		Pega Clientes.
+//	@Tags			Clientes
+//	@Accept			json
+//	@Produce		json
+//	@Success		200	{array}	[]models.Customer
+//	@Router			/api/v1/clientes [get]
 func (r handler) GetAll(app *fiber.Ctx) error {
 	var customer []models.Customer
 

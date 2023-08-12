@@ -18,7 +18,7 @@ import (
 
 	_ "fiber/docs"
 
-	fiberSwagger "github.com/swaggo/fiber-swagger"
+	"github.com/gofiber/swagger"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -26,26 +26,27 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
-// @title Fiber Swagger Example API
-// @version 2.0
-// @description This is a sample server server.
+// @title API
+// @version 1.0
+// @description This is an auto-generated API Docs.
 // @termsOfService http://swagger.io/terms/
-
 // @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
+// @contact.email your@mail.com
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost:3000
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 // @BasePath /
-// @schemes http
 func Setup() {
 	app := fiber.New(fiber.Config{
 		JSONEncoder: json.Marshal,
 		JSONDecoder: json.Unmarshal,
 	})
+
+	
+	app.Get("/swagger/*", swagger.HandlerDefault)
+
 
 	app.Use(recover.New())
 
@@ -69,10 +70,6 @@ func Setup() {
 	files.RegisterRoutes(app, db)
 	utils.RegisterRoutes(app, db)
 	budget.RegisterRoutes(app, db)
-
-	app.Get("/swagger/*", fiberSwagger.WrapHandler) // default
-
-	// go Hello()
 
 	utils.StartServerWithGracefulShutdown(app)
 

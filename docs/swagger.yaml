@@ -1,24 +1,355 @@
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.Budget:
+    properties:
+      anotacoes:
+        type: string
+      arquivos:
+        items:
+          $ref: '#/definitions/models.Files'
+        type: array
+      cliente:
+        $ref: '#/definitions/models.Customer'
+      createdAt:
+        type: string
+      data:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      dentes_procedimento:
+        items:
+          $ref: '#/definitions/models.Tooth'
+        type: array
+      forma_pagamento:
+        type: string
+      id:
+        type: integer
+      link_boleto:
+        type: string
+      link_nota:
+        type: string
+      link_pagamento:
+        type: string
+      paymentid:
+        type: string
+      quantidade_parcelas:
+        type: integer
+      situacao:
+        type: string
+      updatedAt:
+        type: string
+      valor_liquido:
+        type: number
+      valor_parcelas:
+        type: integer
+      valor_total:
+        type: number
+      valores_proposta:
+        items:
+          $ref: '#/definitions/models.ProposedValue'
+        type: array
+      vendedor:
+        $ref: '#/definitions/models.User'
+    required:
+    - data
+    - forma_pagamento
+    - valor_total
+    type: object
+  models.Customer:
+    properties:
+      assas_id:
+        type: string
+      bairro:
+        type: string
+      cep:
+        type: string
+      cidade:
+        type: string
+      complemento:
+        type: string
+      consultas_creditos:
+        type: integer
+      consultas_realizadas:
+        type: integer
+      consultas_restantes:
+        type: integer
+      contato:
+        type: string
+      contato2:
+        type: string
+      cpf:
+        type: string
+      cpf_responsavel:
+        type: string
+      createdAt:
+        type: string
+      data_nascimento:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      estado:
+        type: string
+      estado_civil:
+        type: string
+      foto:
+        type: string
+      id:
+        type: integer
+      idade:
+        type: integer
+      indicacao:
+        type: string
+      logradouro:
+        type: string
+      midias:
+        items:
+          $ref: '#/definitions/models.Files'
+        type: array
+      nome:
+        type: string
+      nome_responsavel:
+        type: string
+      numero:
+        type: string
+      observacao:
+        type: string
+      profissao:
+        type: string
+      prontuario:
+        type: string
+      rg:
+        type: string
+      sexo:
+        type: string
+      situacao:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.Files:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      filename:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      url:
+        type: string
+    type: object
+  models.Groups:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      nome:
+        type: string
+      updatedAt:
+        type: string
+    required:
+    - nome
+    type: object
+  models.Procedure:
+    properties:
+      categoria:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      nome:
+        type: string
+      preco:
+        type: string
+      updatedAt:
+        type: string
+    required:
+    - categoria
+    - nome
+    - preco
+    type: object
+  models.ProposedValue:
+    properties:
+      addition:
+        type: string
+      amount:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      discount:
+        type: string
+      id:
+        type: integer
+      price:
+        type: string
+      updatedAt:
+        type: string
+      x:
+        type: string
+    type: object
+  models.Tooth:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      nome:
+        type: string
+      numero:
+        type: string
+      procedimentos:
+        items:
+          $ref: '#/definitions/models.Procedure'
+        type: array
+      updatedAt:
+        type: string
+    type: object
+  models.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      first_name:
+        type: string
+      grupos:
+        items:
+          $ref: '#/definitions/models.Groups'
+        type: array
+      id:
+        type: integer
+      is_active:
+        type: boolean
+      is_staff:
+        type: boolean
+      last_name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      updatedAt:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - first_name
+    - is_staff
+    - last_name
+    - password
+    - username
+    type: object
 info:
   contact: {}
 paths:
-  /users:
+  /api/v1/clientes:
+    get:
+      consumes:
+      - application/json
+      description: Pega Clientes.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/models.Customer'
+              type: array
+            type: array
+      summary: Pega Clientes.
+      tags:
+      - Clientes
+  /api/v1/clientes/asaas:
+    get:
+      consumes:
+      - application/json
+      description: Pega Clientes Asaas.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/models.Customer'
+              type: array
+            type: array
+      summary: Pega Clientes Asaas.
+      tags:
+      - Clientes
+  /api/v1/orcamentos:
     post:
       consumes:
-        - application/json
+      - application/json
+      description: Cria um novo Budget
       parameters:
-        - description: Coloque seu Username
-          in: body
-          name: username
-          required: true
+      - description: Budget
+        in: body
+        name: budget
+        required: true
+        schema:
+          $ref: '#/definitions/models.Budget'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
           schema:
-            type: string
-
-        - description: Coloque sua Password
-          in: body
-          name: password
-          required: true
+            $ref: '#/definitions/models.Budget'
+      summary: Cria um novo Budget
+      tags:
+      - Budget
+  /api/v1/utils/{mes}/{ano}:
+    get:
+      consumes:
+      - application/json
+      description: Pega Caixa.
+      parameters:
+      - description: Mes
+        in: path
+        name: mes
+        type: integer
+      - description: Ano
+        in: path
+        name: ano
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
           schema:
-            type: string
-
-
+            items:
+              type: object
+            type: array
+      summary: Pega Caixa.
+      tags:
+      - Caixa
 swagger: "2.0"
