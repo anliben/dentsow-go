@@ -378,6 +378,34 @@ paths:
       tags:
       - budget
   /api/v1/orcamentos/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete budget.
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: forma pagamento
+        in: body
+        name: budget
+        required: true
+        schema:
+          $ref: '#/definitions/models.Budget'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Budget'
+            type: array
+      summary: delete budget.
+      tags:
+      - budget
     put:
       consumes:
       - application/json

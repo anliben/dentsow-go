@@ -8,6 +8,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Getbudget delete budget.
+//	@Description	delete budget.
+//	@Summary		delete budget.
+//	@Tags			budget
+//	@Accept			json
+//	@Produce		json
+//	@Param			id						path	int		true	"Id"
+//	@Param			budget		body	models.Budget	true	"forma pagamento"
+//	@Success		200						{array}	models.Budget
+//	@Router			/api/v1/orcamentos/{id} [delete]
 func (r handler) Delete(app *fiber.Ctx) error {
 
 	id := app.Params("id")

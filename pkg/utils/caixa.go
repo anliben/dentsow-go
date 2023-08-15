@@ -98,7 +98,7 @@ func (r handler) GetCaixaEnd(app *fiber.Ctx) error {
 		}
 
 		caixa := Caixa{
-			Data:              item.Data,
+			Data:              item.CreatedAt.String(),
 			Prontuario:        item.Cliente.Prontuario,
 			Status:            orcamento[index].Situacao,
 			TipoPagamento:     string(item.FormaPagamento),
