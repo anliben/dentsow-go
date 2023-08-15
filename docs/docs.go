@@ -45,9 +45,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/clientes/asaas": {
+        "/api/v1/orcamentos": {
             "get": {
-                "description": "Pega Clientes Asaas.",
+                "description": "Pega budget.",
                 "consumes": [
                     "application/json"
                 ],
@@ -55,9 +55,41 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Clientes"
+                    "budget"
                 ],
-                "summary": "Pega Clientes Asaas.",
+                "summary": "Pega budget.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "data",
+                        "name": "data",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "situacao",
+                        "name": "situacao",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "anotacoes",
+                        "name": "anotacoes",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "forma pagamento",
+                        "name": "forma_pagamento",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -66,15 +98,13 @@ const docTemplate = `{
                             "items": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/definitions/models.Customer"
+                                    "$ref": "#/definitions/models.Budget"
                                 }
                             }
                         }
                     }
                 }
-            }
-        },
-        "/api/v1/orcamentos": {
+            },
             "post": {
                 "description": "Cria um novo Budget",
                 "consumes": [
@@ -84,7 +114,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Budget"
+                    "budget"
                 ],
                 "summary": "Cria um novo Budget",
                 "parameters": [
@@ -103,6 +133,50 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Budget"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/orcamentos/{id}": {
+            "put": {
+                "description": "Atualiza budget.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "budget"
+                ],
+                "summary": "Atualiza budget.",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "forma pagamento",
+                        "name": "budget",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Budget"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Budget"
+                            }
                         }
                     }
                 }
@@ -141,7 +215,10 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "type": "object"
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/definitions/utils.Caixa"
+                                }
                             }
                         }
                     }
@@ -541,6 +618,53 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "utils.Caixa": {
+            "type": "object",
+            "properties": {
+                "clienteAssas": {
+                    "type": "string"
+                },
+                "data": {
+                    "type": "string"
+                },
+                "dataDaConfirmacao": {
+                    "type": "string"
+                },
+                "descricao": {
+                    "type": "string"
+                },
+                "discount": {
+                    "type": "string"
+                },
+                "juros": {
+                    "type": "number"
+                },
+                "liquido": {
+                    "type": "number"
+                },
+                "multas": {
+                    "type": "string"
+                },
+                "prontuario": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tipoPagamento": {
+                    "type": "string"
+                },
+                "total": {
+                    "type": "number"
+                },
+                "urlRecebimento": {
+                    "type": "string"
+                },
+                "vencimento": {
                     "type": "string"
                 }
             }

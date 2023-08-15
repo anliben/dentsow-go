@@ -10,7 +10,7 @@ import (
 // Create Cria um novo Budget.
 //	@Description	Cria um novo Budget
 //	@Summary		Cria um novo Budget
-//	@Tags			Budget
+//	@Tags			budget
 //	@Accept			json
 //	@Produce		json
 //	@Param			budget body models.Budget true "Budget"

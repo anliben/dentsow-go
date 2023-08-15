@@ -8,6 +8,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Getbudget Pega budget.
+//	@Description	Pega budget.
+//	@Summary		Pega budget.
+//	@Tags			budget
+//	@Accept			json
+//	@Produce		json
+//	@Param			data					query	int		false	"data"
+//	@Param			situacao				query	int		false	"situacao"
+//	@Param			anotacoes	query	string	false	"anotacoes"
+//	@Param			forma_pagamento		query	string	false	"forma pagamento"
+//	@Param			id						query	int		false	"Id"
+//	@Success		200						{array}	[]models.Budget
+//	@Router			/api/v1/orcamentos [get]
 func (r handler) GetAll(app *fiber.Ctx) error {
 	var budget []models.Budget
 

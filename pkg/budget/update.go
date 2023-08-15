@@ -7,6 +7,16 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Getbudget Atualiza budget.
+//	@Description	Atualiza budget.
+//	@Summary		Atualiza budget.
+//	@Tags			budget
+//	@Accept			json
+//	@Produce		json
+//	@Param			id						path	int		true	"Id"
+//	@Param			budget		body	models.Budget	true	"forma pagamento"
+//	@Success		200						{array}	models.Budget
+//	@Router			/api/v1/orcamentos/{id} [put]
 func (r handler) Update(app *fiber.Ctx) error {
 	var orcamento models.Budget
 	var foo models.Budget
@@ -24,7 +34,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 		return err
 	}
 
-	err = r.Db.First(&customer, id).Error
+	err = r.Db.First(&customer, foo.Cliente.ID).Error
 
 	if err != nil {
 		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
@@ -65,7 +75,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 		Midia:               foo.Cliente.Midia,
 	}).Where("id = ?", foo.Cliente.ID).Error
 
-	err = r.Db.First(&vendedor, id).Error
+	err = r.Db.First(&vendedor, foo.Vendedor.ID).Error
 
 	if err != nil {
 		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
@@ -79,7 +89,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 	r.Db.Model(&orcamento).Association("Tooth").Replace(foo.Tooth)
 	r.Db.Model(&orcamento).Association("ValorProposta").Replace(foo.ValorProposta)
 
-	err = r.Db.Where("id = ?", id).First(&orcamento).Error
+	err = r.Db.First(&orcamento, id).Error
 
 	if err != nil {
 		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{

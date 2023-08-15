@@ -263,6 +263,37 @@ definitions:
     - password
     - username
     type: object
+  utils.Caixa:
+    properties:
+      clienteAssas:
+        type: string
+      data:
+        type: string
+      dataDaConfirmacao:
+        type: string
+      descricao:
+        type: string
+      discount:
+        type: string
+      juros:
+        type: number
+      liquido:
+        type: number
+      multas:
+        type: string
+      prontuario:
+        type: string
+      status:
+        type: string
+      tipoPagamento:
+        type: string
+      total:
+        type: number
+      urlRecebimento:
+        type: string
+      vencimento:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
@@ -285,11 +316,32 @@ paths:
       summary: Pega Clientes.
       tags:
       - Clientes
-  /api/v1/clientes/asaas:
+  /api/v1/orcamentos:
     get:
       consumes:
       - application/json
-      description: Pega Clientes Asaas.
+      description: Pega budget.
+      parameters:
+      - description: data
+        in: query
+        name: data
+        type: integer
+      - description: situacao
+        in: query
+        name: situacao
+        type: integer
+      - description: anotacoes
+        in: query
+        name: anotacoes
+        type: string
+      - description: forma pagamento
+        in: query
+        name: forma_pagamento
+        type: string
+      - description: Id
+        in: query
+        name: id
+        type: integer
       produces:
       - application/json
       responses:
@@ -298,13 +350,12 @@ paths:
           schema:
             items:
               items:
-                $ref: '#/definitions/models.Customer'
+                $ref: '#/definitions/models.Budget'
               type: array
             type: array
-      summary: Pega Clientes Asaas.
+      summary: Pega budget.
       tags:
-      - Clientes
-  /api/v1/orcamentos:
+      - budget
     post:
       consumes:
       - application/json
@@ -325,7 +376,36 @@ paths:
             $ref: '#/definitions/models.Budget'
       summary: Cria um novo Budget
       tags:
-      - Budget
+      - budget
+  /api/v1/orcamentos/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Atualiza budget.
+      parameters:
+      - description: Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: forma pagamento
+        in: body
+        name: budget
+        required: true
+        schema:
+          $ref: '#/definitions/models.Budget'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Budget'
+            type: array
+      summary: Atualiza budget.
+      tags:
+      - budget
   /api/v1/utils/{mes}/{ano}:
     get:
       consumes:
@@ -347,7 +427,9 @@ paths:
           description: OK
           schema:
             items:
-              type: object
+              items:
+                $ref: '#/definitions/utils.Caixa'
+              type: array
             type: array
       summary: Pega Caixa.
       tags:
