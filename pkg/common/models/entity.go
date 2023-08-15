@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/go-playground/validator"
-	"github.com/mobilemindtec/go-payments/api"
 	"github.com/mobilemindtec/go-payments/asaas"
 	"gorm.io/gorm"
 )
@@ -151,60 +150,60 @@ type Budget struct {
 }
 
 func (u *Budget) BeforeCreate(db *gorm.DB) (err error) {
-	var payment *asaas.Payment
+	// var payment *asaas.Payment
 
-	if u.FormaPagamento == "BOLETO" {
-		var cliente Customer
+	// if u.FormaPagamento == "BOLETO" {
+	// 	var cliente Customer
 
-		err = db.Find(&cliente, u.ClienteRefer).Error
+	// 	err = db.Find(&cliente, u.ClienteRefer).Error
 
-		if err != nil {
-			fmt.Println(err)
-		}
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
 
-		token := configs.GetAsaasToken()
-		pay := asaas.NewAsaas("BRL", token.AsaasToken, token.AsaasMode)
+	// 	token := configs.GetAsaasToken()
+	// 	pay := asaas.NewAsaas("BRL", token.AsaasToken, token.AsaasMode)
 
-		// ChargeType := asaas.Detached
-		// if u.Quantidadeparcelas > 1 {
-		// 	ChargeType = asaas.Installment
-		// 	payment.InstallmentCount = int64(u.Quantidadeparcelas)
-		// 	payment.InstallmentValue = u.ValorParcelas
-		// 	payment.TotalValue = u.ValorTotal
-		// } else {
-		// 	payment.Value = u.ValorTotal
-		// }
+	// 	ChargeType := asaas.Detached
+	// 	if u.Quantidadeparcelas > 1 {
+	// 		ChargeType = asaas.Installment
+	// 		payment.InstallmentCount = int64(u.Quantidadeparcelas)
+	// 		payment.InstallmentValue = u.ValorParcelas
+	// 		payment.TotalValue = u.ValorTotal
+	// 	} else {
+	// 		payment.Value = u.ValorTotal
+	// 	}
 
-		payment = &asaas.Payment{
-			BillingType:       asaas.BillingType("BOLETO"),
-			DueDate:           u.Data,
-			Description:       "Denshow - Orçamento",
-			ExternalReference: u.Cliente.Prontuario,
-			PostalService:     false,
-			Name:              u.Cliente.Nome,
-			DueDateLimitDays:  5,
-			// ChargeType:        ChargeType,
-			Customer:            u.Cliente.Assasid,
-			NextDueDate:         u.Data,
-			SubscriptionCycle:   api.SubscriptionCycle("1"),
-			MaxInstallmentCount: int64(u.Quantidadeparcelas),
-		}
+	// 	payment = &asaas.Payment{
+	// 		BillingType:       asaas.BillingType("BOLETO"),
+	// 		DueDate:           u.Data,
+	// 		Description:       "Denshow - Orçamento",
+	// 		ExternalReference: u.Cliente.Prontuario,
+	// 		PostalService:     false,
+	// 		Name:              u.Cliente.Nome,
+	// 		DueDateLimitDays:  5,
+	// 		// ChargeType:        ChargeType,
+	// 		Customer:            u.Cliente.Assasid,
+	// 		NextDueDate:         u.Data,
+	// 		SubscriptionCycle:   api.SubscriptionCycle("1"),
+	// 		MaxInstallmentCount: int64(u.Quantidadeparcelas),
+	// 	}
 
-		resp, err := pay.PaymentCreate(payment)
+	// 	resp, err := pay.PaymentCreate(payment)
 
-		fmt.Println(resp, err)
+	// 	fmt.Println(resp, err)
 
-		if err != nil {
-			return err
-		}
+	// 	if err != nil {
+	// 		return err
+	// 	}
 
-		u.Paymentid = resp.Id
-		u.Situacao = "PENDING"
-		u.Data = resp.DateCreated
-		u.NetValue = resp.NetValue
-		u.Linkpagamento = resp.InvoiceUrl
-		u.BankSlipUrl = resp.BankSlipUrl
-	}
+	// 	u.Paymentid = resp.Id
+	// 	u.Situacao = "PENDING"
+	// 	u.Data = resp.DateCreated
+	// 	u.NetValue = resp.NetValue
+	// 	u.Linkpagamento = resp.InvoiceUrl
+	// 	u.BankSlipUrl = resp.BankSlipUrl
+	// }
 
 	u.Situacao = "PENDING"
 	u.NetValue = u.ValorTotal
