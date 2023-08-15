@@ -16,6 +16,8 @@ func (r handler) GetAll(app *fiber.Ctx) error {
 	anotacoes := app.Query("anotacoes")
 	forma_pagamento := app.Query("forma_pagamento")
 	valor_total := app.Query("valor_total")
+	id := app.Query("id")
+
 
 	db := r.Db.
 		Preload("Cliente").
@@ -26,6 +28,24 @@ func (r handler) GetAll(app *fiber.Ctx) error {
 		Preload("Tooth").
 		Preload("Tooth.Procedure").
 		Preload("ValorProposta")
+
+		if id != "" {
+			err := db.First(&budget, id).Error
+			
+			if err != nil {
+				app.Status(http.StatusUnprocessableEntity).JSON(&fiber.Map{
+					"message": "Invalid data",
+				})
+				return err
+			}
+
+			return app.JSON(&fiber.Map{
+				"count":    len(budget),
+				"next":     "null",
+				"previous": "null",
+				"items":    budget,})
+		}
+	
 
 	db.Where(utils.Builder("data LIKE ?", "%"+data+"%"))
 	db.Where(utils.Builder("situacao LIKE ?", "%"+situacao+"%"))
