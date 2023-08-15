@@ -24,7 +24,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 		return err
 	}
 
-	err = r.Db.Where("id = ?", id).First(&customer).Error
+	err = r.Db.First(&customer, id).Error
 
 	if err != nil {
 		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
@@ -65,7 +65,7 @@ func (r handler) Update(app *fiber.Ctx) error {
 		Midia:               foo.Cliente.Midia,
 	}).Where("id = ?", foo.Cliente.ID).Error
 
-	err = r.Db.Where("id = ?", id).First(&vendedor).Error
+	err = r.Db.First(&vendedor, id).Error
 
 	if err != nil {
 		err = app.Status(http.StatusNotFound).JSON(&fiber.Map{
