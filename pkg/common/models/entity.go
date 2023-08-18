@@ -3,7 +3,6 @@ package models
 import (
 	"fiber/internal/configs"
 	"fmt"
-	"time"
 
 	"github.com/go-playground/validator"
 	"github.com/mobilemindtec/go-payments/asaas"
