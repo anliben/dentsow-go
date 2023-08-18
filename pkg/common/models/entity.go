@@ -68,9 +68,7 @@ func (u *Customer) BeforeCreate(db *gorm.DB) (err error) {
 			return err
 		}
 
-		ano, mes, _ := time.Now().Date()
-		prontuario := fmt.Sprintf("%d%d%d", ano, int32(mes), last_id)
-		u.Prontuario = prontuario
+		u.Prontuario = string(last_id)
 	}
 
 	token := configs.GetAsaasToken()
